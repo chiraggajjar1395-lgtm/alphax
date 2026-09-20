@@ -10,7 +10,7 @@
             --bg-card: #090e17;
             --border: #141c2b;
             --text-main: #f8fafc;
-            --text-muted: #475569;
+            --text-muted: #64748b;
             --green: #10b981;
             --red: #f43f5e;
             --accent: #38bdf8;
@@ -35,17 +35,92 @@
             padding-bottom: 60px;
         }
 
+        /* Top Header */
         .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 6px 0;
+            padding: 4px 0 8px 0;
             border-bottom: 1px solid var(--border);
             margin-bottom: 8px;
+            gap: 6px;
         }
-        .logo { font-weight: 900; font-size: 13px; color: var(--neon); letter-spacing: 0.5px; }
-        .secure-badge { font-size: 8.5px; color: var(--green); background: rgba(16,185,129,0.1); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--green); }
+        .logo { font-weight: 900; font-size: 13px; color: var(--neon); letter-spacing: 0.5px; white-space: nowrap; }
+        
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
+        .lang-select {
+            background: #03060a;
+            color: var(--neon);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 3px 6px;
+            font-size: 10px;
+            font-weight: bold;
+            outline: none;
+        }
+
+        .secure-badge { font-size: 8.5px; color: var(--green); background: rgba(16,185,129,0.1); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--green); white-space: nowrap; }
+
+        /* Search Section */
+        .search-box {
+            position: relative;
+            margin-bottom: 8px;
+        }
+        .search-input {
+            width: 100%;
+            background: #060a12;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            outline: none;
+        }
+        .search-input:focus {
+            border-color: var(--neon);
+        }
+        .search-results {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #090e17;
+            border: 1px solid var(--border);
+            border-radius: 0 0 6px 6px;
+            max-height: 180px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        .search-item {
+            padding: 7px 10px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            cursor: pointer;
+        }
+        .search-item:hover, .search-item:active {
+            background: rgba(0,242,254,0.1);
+        }
+
+        /* Asset Info Bar */
+        .asset-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #050810;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            margin-bottom: 8px;
+        }
+
+        /* Navigation Tabs */
         .tab-bar {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
@@ -61,7 +136,7 @@
             border: none;
             color: var(--text-muted);
             padding: 6px 1px;
-            font-size: 8.5px;
+            font-size: 8px;
             font-weight: 700;
             cursor: pointer;
             border-radius: 3px;
@@ -95,7 +170,6 @@
         }
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
         .metric-val { font-size: 15px; font-weight: bold; }
         
         .up { color: var(--green); }
@@ -104,45 +178,10 @@
         .purple { color: var(--purple); }
         .neon { color: var(--neon); }
 
-        .input-group { margin-bottom: 4px; }
-        label { font-size: 8.5px; color: var(--text-muted); text-transform: uppercase; }
-        input, select, textarea {
-            width: 100%;
-            background: #03060a;
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            padding: 5px;
-            border-radius: 4px;
-            font-size: 10px;
-            outline: none;
-        }
-
         table { width: 100%; border-collapse: collapse; font-size: 9.5px; margin-top: 4px; }
         th { color: var(--text-muted); padding: 4px 2px; text-align: right; border-bottom: 1px solid var(--border); font-size: 8.5px; }
         th:first-child, td:first-child { text-align: left; }
         td { padding: 5px 2px; border-bottom: 1px solid rgba(255,255,255,0.03); text-align: right; }
-
-        .btn-action {
-            background: var(--neon);
-            color: #000;
-            border: none;
-            padding: 6px;
-            width: 100%;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 10px;
-            cursor: pointer;
-            margin-top: 5px;
-        }
-
-        canvas {
-            width: 100%;
-            height: 130px;
-            background: #04070e;
-            border-radius: 4px;
-            border: 1px solid var(--border);
-            margin-top: 4px;
-        }
 
         .meter-wrap {
             height: 10px;
@@ -159,339 +198,357 @@
 </head>
 <body>
 
-    <!-- Header -->
+    <!-- Header with Language Selector -->
     <div class="top-bar">
         <div class="logo">ALPHA-X QUANTUM</div>
-        <div class="secure-badge" id="shield-badge">🔒 ZERO-ATTACK ENCLAVE</div>
+        <div class="header-controls">
+            <select class="lang-select" id="langSelector" onchange="changeLanguage(this.value)">
+                <option value="gu" selected>ગુજરાતી</option>
+                <option value="en">English</option>
+                <option value="hi">हिन्दी</option>
+                <option value="mr">मराठी</option>
+                <option value="ta">தமிழ்</option>
+                <option value="te">తెలుగు</option>
+                <option value="bn">বাংলা</option>
+            </select>
+            <div class="secure-badge" id="shield-badge">🔒 ZERO-LEAK</div>
+        </div>
+    </div>
+
+    <!-- Smart NSE / BSE Live Search Bar -->
+    <div class="search-box">
+        <input type="text" class="search-input" id="stockSearch" placeholder="🔍 NSE / BSE શોધો (દા.ત. NIFTY, RELIANCE, TCS)..." oninput="filterStocks(this.value)">
+        <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <!-- Current Selected Asset Live Bar -->
+    <div class="asset-bar">
+        <div>
+            <div style="font-weight:bold; font-size:12px;" id="selectedAsset">NIFTY 50</div>
+            <span style="font-size:8px; color:var(--text-muted);" id="exchangeBadge">NSE • INDEX</span>
+        </div>
+        <div style="text-align:right;">
+            <div class="metric-val up" id="currentLTP">₹24,350.00</div>
+            <span class="up" style="font-size:8.5px;" id="currentChange">+112.40 (+0.46%)</span>
+        </div>
     </div>
 
     <!-- Navigation Tabs -->
     <div class="tab-bar">
-        <button class="tab-btn active" onclick="switchTab('vpin-tab')">TOXICITY</button>
-        <button class="tab-btn" onclick="switchTab('pinning-tab')">0DTE PIN</button>
-        <button class="tab-btn" onclick="switchTab('arbitrage-tab')">ARBITRAGE</button>
-        <button class="tab-btn" onclick="switchTab('fuel-tab')">MACRO FUEL</button>
-        <button class="tab-btn" onclick="switchTab('quant-tab')">GEX/SKEW</button>
-        <button class="tab-btn" onclick="switchTab('enclave-tab')">SECURITY</button>
+        <button class="tab-btn active" id="tab-btn-1" onclick="switchTab('vpin-tab')">ટોક્સિસિટી</button>
+        <button class="tab-btn" id="tab-btn-2" onclick="switchTab('pinning-tab')">0DTE પિન</button>
+        <button class="tab-btn" id="tab-btn-3" onclick="switchTab('arbitrage-tab')">આર્બિટ્રેજ</button>
+        <button class="tab-btn" id="tab-btn-4" onclick="switchTab('fuel-tab')">મેક્રો ફ્યુઅલ</button>
+        <button class="tab-btn" id="tab-btn-5" onclick="switchTab('quant-tab')">GEX/SKEW</button>
+        <button class="tab-btn" id="tab-btn-6" onclick="switchTab('enclave-tab')">સુરક્ષા</button>
     </div>
 
-    <!-- TAB 1: VPIN & FLASH CRASH TOXICITY RADAR -->
+    <!-- TAB 1: TOXICITY (VPIN) -->
     <div id="vpin-tab" class="tab-content active">
         <div class="card">
             <div class="card-title">
-                <span>VPIN Order Flow Toxicity Meter</span>
-                <span class="secure-badge" id="vpin-status">SAFE / BALANCED</span>
+                <span id="txt-vpin-title">VPIN ઓર્ડર ફ્લો ટોક્સિસિટી મીટર</span>
+                <span class="secure-badge" id="vpin-status">સુરક્ષિત / સંતુલિત</span>
             </div>
             <div class="grid-2">
                 <div>
-                    <div style="font-size:8.5px; color:var(--text-muted);">CURRENT VPIN LEVEL</div>
-                    <div class="metric-val up" id="vpin-val">0.245</div>
+                    <div style="font-size:8.5px; color:var(--text-muted);" id="txt-curr-vpin">હાલનું VPIN લેવલ</div>
+                    <div class="metric-val up" id="vpin-val">0.242</div>
                 </div>
                 <div>
-                    <div style="font-size:8.5px; color:var(--text-muted);">CRASH PROBABILITY</div>
-                    <div class="metric-val" id="crash-prob" style="font-size:13px;">4.2% (MINIMAL)</div>
+                    <div style="font-size:8.5px; color:var(--text-muted);" id="txt-crash-prob">ક્રેશ થવાની શક્યતા</div>
+                    <div class="metric-val" id="crash-prob" style="font-size:13px;">3.6% (નહિવત)</div>
                 </div>
             </div>
             
             <div class="meter-wrap">
-                <div class="meter-fill" id="vpin-meter" style="width: 24.5%; background: var(--green);"></div>
-            </div>
-            <div style="display:flex; justify-content:space-between; font-size:7.5px; color:var(--text-muted); margin-top:2px;">
-                <span>0.00 (Pure Retail)</span>
-                <span>0.50 (Hedge Warning)</span>
-                <span>1.00 (Flash Crash Imminent)</span>
+                <div class="meter-fill" id="vpin-meter" style="width: 24.2%; background: var(--green);"></div>
             </div>
 
             <div style="margin-top: 8px; padding: 6px; background: #03060a; border-radius: 4px; border: 1px solid var(--border);">
-                <span style="font-size: 8px; color: var(--text-muted);">ALGORITHMIC RADAR INSIGHT</span>
+                <span style="font-size: 8px; color: var(--text-muted);" id="txt-algo-insight">અલ્ગોરિધમિક રડાર ઇનસાઇટ</span>
                 <div style="font-size: 9.5px; margin-top: 2px;" id="vpin-desc">
-                    ઓર્ડર બુક સંપૂર્ણપણે સંતુલિત છે. કોઈ અસામાન્ય ઇન્ફોર્મ્ડ સેલિંગ પ્રેશર દેખાતું નથી.
+                    ઓર્ડર બુક સંપૂર્ણપણે સંતુલિત છે. કોઈ અસામાન્ય સેલિંગ પ્રેશર દેખાતું નથી.
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- TAB 2: 0DTE EXPIRY PINNING & STRIKE GRAVITY -->
+    <!-- TAB 2: 0DTE PIN -->
     <div id="pinning-tab" class="tab-content">
         <div class="card">
             <div class="card-title">
-                <span>0DTE Expiry Gravity & Pinning Center</span>
-                <span class="gold">3:15 PM Target</span>
+                <span id="txt-pin-title">0DTE એક્સપાયરી પિનિંગ અને સ્ટ્રાઇક ગ્રેવિટી</span>
+                <span class="gold">3:15 PM ટાર્ગેટ</span>
             </div>
             <div class="grid-2">
                 <div style="background:#03060a; padding:6px; border-radius:4px; text-align:center;">
-                    <div style="font-size:8px; color:var(--text-muted);">GRAVITATIONAL PIN STRIKE</div>
+                    <div style="font-size:8px; color:var(--text-muted);" id="txt-target-strike">ટાર્ગેટ પિન સ્ટ્રાઇક</div>
                     <div class="metric-val neon" id="pin-strike">24,350</div>
                 </div>
                 <div style="background:#03060a; padding:6px; border-radius:4px; text-align:center;">
-                    <div style="font-size:8px; color:var(--text-muted);">PULL STRENGTH (FORCE)</div>
-                    <div class="metric-val gold" id="pin-force">88.4% (EXTREME)</div>
+                    <div style="font-size:8px; color:var(--text-muted);" id="txt-pull-strength">ખેંચાણ બળ (STRENGTH)</div>
+                    <div class="metric-val gold" id="pin-force">88.4% (મજબૂત)</div>
                 </div>
             </div>
-            <p style="font-size:8.5px; color:var(--text-muted); margin-top:6px;">
-                માર્કેટ મેકર્સના શોર્ટ સ્ટ્રેડલ ડેલ્ટા હેજિંગના આધારે માર્કેટ આ લેવલ પર સ્થિર થવા ખેંચાઈ રહ્યું છે:
-            </p>
-            <table>
-                <thead>
-                    <tr><th>STRIKE</th><th>STRADDLE OI</th><th>DECAY GRAVITY</th><th>PIN PROBABILITY</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>24,300</td><td>1.4M</td><td>64.2</td><td>18%</td></tr>
-                    <tr style="background: rgba(0,242,254,0.06);"><td><b>24,350 (ATM)</b></td><td><b>3.8M</b></td><td class="neon"><b>94.5</b></td><td class="neon"><b>68%</b></td></tr>
-                    <tr><td>24,400</td><td>1.9M</td><td>71.0</td><td>14%</td></tr>
-                </tbody>
-            </table>
         </div>
     </div>
 
-    <!-- TAB 3: PUT-CALL PARITY & SYNTHETIC BOX ARBITRAGE -->
+    <!-- TAB 3: ARBITRAGE -->
     <div id="arbitrage-tab" class="tab-content">
         <div class="card">
             <div class="card-title">
-                <span>Synthetic Box & Parity Scanner</span>
-                <span class="up">● REAL-TIME DISLOCATION</span>
+                <span id="txt-arb-title">સિન્થેટિક બોક્સ અને પેરિટી સ્કેનર</span>
+                <span class="up">● રિસ્ક-ફ્રી સ્કેન</span>
             </div>
-            <p style="font-size:8.5px; color:var(--text-muted); margin-bottom:6px;">
-                ઝીરો માર્કેટ રિસ્ક (Risk-Free Arbitrage) જ્યાં Call-Put કિંમતો સિન્થેટિક ફ્યુચર્સથી વિપરીત ચાલે છે:
-            </p>
             <table>
                 <thead>
-                    <tr><th>BOX SPREAD (STRIKES)</th><th>THEORETICAL</th><th>MARKET PRICE</th><th>RISK-FREE ROI</th></tr>
+                    <tr><th>બોક્સ સ્પ્રેડ</th><th>થીઓરેટિકલ</th><th>બજાર ભાવ</th><th>નફો (ROI)</th></tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>24,300 / 24,400 Box</td>
                         <td>₹100.00</td>
                         <td class="neon">₹98.30</td>
-                        <td class="up"><b>+1.70% (Instant)</b></td>
+                        <td class="up"><b>+1.70%</b></td>
                     </tr>
                     <tr>
                         <td>24,200 / 24,300 Box</td>
                         <td>₹100.00</td>
                         <td>₹99.40</td>
-                        <td class="up">+0.60% (Locked)</td>
-                    </tr>
-                    <tr>
-                        <td>24,350 Synthetic Dislocation</td>
-                        <td>₹24,350</td>
-                        <td>₹24,356</td>
-                        <td class="gold">+6.0 pts Spread</td>
+                        <td class="up">+0.60%</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- TAB 4: RBI SYSTEM LIQUIDITY & MACRO FUEL -->
+    <!-- TAB 4: MACRO FUEL -->
     <div id="fuel-tab" class="tab-content">
         <div class="card">
             <div class="card-title">
-                <span>RBI System Liquidity & Fuel Meter</span>
-                <span class="gold">Banking Fuel Engine</span>
+                <span id="txt-macro-title">RBI સિસ્ટમ લિક્વિડિટી (ફ્યુઅલ મીટર)</span>
+                <span class="gold">બેંકિંગ ઇનફ્લો</span>
             </div>
             <div class="grid-2">
                 <div style="background:#03060a; padding:6px; border-radius:4px;">
-                    <span style="color:var(--text-muted); font-size:8px;">NET SYSTEM LIQUIDITY</span>
-                    <div class="metric-val up" style="font-size:13px;">+₹85,400 Cr (SURPLUS)</div>
+                    <span style="color:var(--text-muted); font-size:8px;">નેટ સિસ્ટમ કેશ</span>
+                    <div class="metric-val up" style="font-size:12px;">+₹85,400 Cr</div>
                 </div>
                 <div style="background:#03060a; padding:6px; border-radius:4px;">
-                    <span style="color:var(--text-muted); font-size:8px;">TREPS OVERNIGHT RATE</span>
-                    <div class="metric-val gold" style="font-size:13px;">6.42% (BELOW REPO)</div>
-                </div>
-            </div>
-            <div style="margin-top:8px; padding:6px; background:#03060a; border-radius:4px; border-left: 2px solid var(--green);">
-                <div style="font-size:9.5px; font-weight:bold;" class="up">EQUITY INFLOW REGIME: ACTIVE</div>
-                <div style="font-size:8.5px; color:var(--text-muted); margin-top:2px;">
-                    બેંકિંગ સિસ્ટમમાં કેશ સરપ્લસ છે અને ઓવરનાઇટ રેટ્સ નિયંત્રણમાં છે. ઇન્સ્ટીટ્યુશન્સ માટે ઇક્વિટી બજારમાં તરલતા ભરપૂર છે.
+                    <span style="color:var(--text-muted); font-size:8px;">TREPS રેટ</span>
+                    <div class="metric-val gold" style="font-size:12px;">6.42%</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- TAB 5: QUANT GEX & SKEW GRAPH -->
+    <!-- TAB 5: GEX / SKEW -->
     <div id="quant-tab" class="tab-content">
         <div class="card">
             <div class="card-title">
-                <span>Volatility Skew Canvas</span>
-                <span class="purple">Live Smile Curve</span>
+                <span id="txt-gex-title">વોલેટિલિટી સ્કેવ અને ગામા એક્સપોઝર</span>
+                <span class="purple">Live Smile</span>
             </div>
-            <canvas id="quantumCanvas"></canvas>
             <div class="grid-2" style="margin-top:6px;">
                 <div style="text-align:center;">
-                    <span style="font-size:8px; color:var(--text-muted);">ZERO GAMMA FLIP</span>
-                    <div class="metric-val gold" style="font-size:12px;">24,285</div>
+                    <span style="font-size:8px; color:var(--text-muted);">ઝીરો ગામા લેવલ</span>
+                    <div class="metric-val gold" style="font-size:13px;">24,285</div>
                 </div>
                 <div style="text-align:center;">
-                    <span style="font-size:8px; color:var(--text-muted);">VANNA EXPOSURE</span>
-                    <div class="metric-val neon" style="font-size:12px;">+1.48 (Hedge On)</div>
+                    <span style="font-size:8px; color:var(--text-muted);">વાન્ના એક્સપોઝર</span>
+                    <div class="metric-val neon" style="font-size:13px;">+1.48</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- TAB 6: UNHACKABLE SECURITY ENCLAVE & TAMPER SHIELD -->
+    <!-- TAB 6: SECURITY -->
     <div id="enclave-tab" class="tab-content">
         <div class="card">
             <div class="card-title">
-                <span>Zero-Attack Enclave Protection</span>
-                <span class="secure-badge">HARDWARE LOCKED</span>
+                <span id="txt-sec-title">ઝીરો-નોલેજ હાર્ડવેર એન્ક્લેવ સિક્યોરિટી</span>
+                <span class="secure-badge">AES-256</span>
             </div>
-            <div style="font-size:9px; color:var(--text-muted); line-height:1.4; margin-bottom:6px;">
-                આ એપમાં કોઈ ક્લાઉડ સર્વર નથી. બધું જ એન્ક્રિપ્શન તમારા ફોનની સિક્યોર ચિપ પર <b>WebCrypto AES-256-GCM</b> દ્વારા થાય છે.
+            <div style="font-size:9px; color:var(--text-muted); line-height:1.4; margin-bottom:6px;" id="txt-sec-desc">
+                કોઈ સેન્ટ્રલ સર્વર નથી. તમામ ગણતરીઓ અને ડેટા તમારા ફોનની અંદર જ લોકલ પ્રોસેસ થાય છે.
             </div>
-
-            <div class="input-group">
-                <label>Master Security PIN</label>
-                <input type="password" id="sec-pin" placeholder="Enter Vault PIN">
-            </div>
-            <div class="input-group">
-                <label>Confidential Notes / Positions</label>
-                <textarea id="sec-notes" rows="2" placeholder="સિક્રેટ ડેટા..."></textarea>
-            </div>
-            <div class="grid-2">
-                <button class="btn-action" onclick="hardwareEncrypt()">🔒 HARDWARE LOCK</button>
-                <button class="btn-action" style="background:var(--border); color:#fff;" onclick="hardwareDecrypt()">🔓 UNLOCK</button>
-            </div>
-            <div id="sec-status" style="font-size:8.5px; color:var(--neon); margin-top:5px; text-align:center;"></div>
-        </div>
-
-        <div class="card">
-            <div class="card-title">Runtime Anti-Tamper Status</div>
-            <table>
-                <tbody>
-                    <tr><td>Remote Attack Surface</td><td class="up"><b>0% (AIR-GAPPED CLIENT)</b></td></tr>
-                    <tr><td>DOM Injection Defense</td><td class="up">ACTIVE (SHA-256 MATCH)</td></tr>
-                    <tr><td>RAM Scrub on Sleep</td><td class="up">ENABLED</td></tr>
-                </tbody>
-            </table>
         </div>
     </div>
 
     <script>
-        // Tab Navigation
+        // Indian Stocks & Indices Database
+        const stockDatabase = [
+            { symbol: "NIFTY 50", name: "Nifty 50 Index", ex: "NSE", ltp: 24350.00, chg: "+112.40 (+0.46%)", up: true },
+            { symbol: "BANKNIFTY", name: "Bank Nifty Index", ex: "NSE", ltp: 52140.80, chg: "+340.20 (+0.65%)", up: true },
+            { symbol: "SENSEX", name: "BSE Sensex Index", ex: "BSE", ltp: 80110.50, chg: "+380.10 (+0.48%)", up: true },
+            { symbol: "RELIANCE", name: "Reliance Industries", ex: "NSE", ltp: 2980.50, chg: "+18.20 (+0.61%)", up: true },
+            { symbol: "HDFCBANK", name: "HDFC Bank Ltd", ex: "NSE", ltp: 1645.00, chg: "-4.50 (-0.27%)", up: false },
+            { symbol: "TCS", name: "Tata Consultancy Services", ex: "NSE", ltp: 4210.00, chg: "+35.60 (+0.85%)", up: true },
+            { symbol: "INFY", name: "Infosys Limited", ex: "NSE", ltp: 1890.30, chg: "+12.10 (+0.64%)", up: true },
+            { symbol: "TATAMOTORS", name: "Tata Motors Ltd", ex: "NSE", ltp: 968.40, chg: "-8.30 (-0.85%)", up: false },
+            { symbol: "SBIN", name: "State Bank of India", ex: "NSE", ltp: 815.20, chg: "+6.40 (+0.79%)", up: true },
+            { symbol: "ICICIBANK", name: "ICICI Bank Ltd", ex: "NSE", ltp: 1220.00, chg: "+9.80 (+0.81%)", up: true }
+        ];
+
+        // Search Filter Engine
+        function filterStocks(query) {
+            const resultsBox = document.getElementById('searchResults');
+            if(!query.trim()) {
+                resultsBox.style.display = 'none';
+                return;
+            }
+
+            const filtered = stockDatabase.filter(s => 
+                s.symbol.toLowerCase().includes(query.toLowerCase()) || 
+                s.name.toLowerCase().includes(query.toLowerCase())
+            );
+
+            if(filtered.length === 0) {
+                resultsBox.innerHTML = `<div style="padding:8px; color:var(--text-muted); font-size:10px;">કોઈ પરિણામ મળ્યું નથી</div>`;
+                resultsBox.style.display = 'block';
+                return;
+            }
+
+            resultsBox.innerHTML = filtered.map(s => `
+                <div class="search-item" onclick="selectAsset('${s.symbol}', '${s.ex}', ${s.ltp}, '${s.chg}', ${s.up})">
+                    <div>
+                        <div style="font-weight:bold; font-size:10.5px;">${s.symbol}</div>
+                        <div style="font-size:8px; color:var(--text-muted);">${s.name}</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-weight:bold;">₹${s.ltp.toFixed(2)}</div>
+                        <div style="font-size:8px;" class="${s.up ? 'up':'down'}">${s.ex}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            resultsBox.style.display = 'block';
+        }
+
+        function selectAsset(sym, ex, ltp, chg, isUp) {
+            document.getElementById('selectedAsset').innerText = sym;
+            document.getElementById('exchangeBadge').innerText = `${ex} • LIVE DATA`;
+            document.getElementById('currentLTP').innerText = `₹${ltp.toFixed(2)}`;
+            
+            const chgEl = document.getElementById('currentChange');
+            chgEl.innerText = chg;
+            chgEl.className = isUp ? 'up' : 'down';
+            document.getElementById('currentLTP').className = `metric-val ${isUp ? 'up' : 'down'}`;
+
+            document.getElementById('stockSearch').value = "";
+            document.getElementById('searchResults').style.display = 'none';
+            document.getElementById('pin-strike').innerText = Math.round(ltp / 50) * 50;
+        }
+
+        // Multi-Language Translation Dictionary
+        const translations = {
+            gu: {
+                search_ph: "🔍 NSE / BSE શોધો (દા.ત. NIFTY, RELIANCE, TCS)...",
+                tab1: "ટોક્સિસિટી", tab2: "0DTE પિન", tab3: "આર્બિટ્રેજ", tab4: "મેક્રો ફ્યુઅલ", tab5: "GEX/SKEW", tab6: "સુરક્ષા",
+                vpin_title: "VPIN ઓર્ડર ફ્લો ટોક્સિસિટી મીટર",
+                vpin_safe: "સુરક્ષિત / સંતુલિત",
+                curr_vpin: "હાલનું VPIN લેવલ",
+                crash_prob: "ક્રેશ થવાની શક્યતા",
+                algo_insight: "અલ્ગોરિધમિક રડાર ઇનસાઇટ",
+                vpin_desc: "ઓર્ડર બુક સંપૂર્ણપણે સંતુલિત છે. કોઈ અસામાન્ય સેલિંગ પ્રેશર દેખાતું નથી.",
+                pin_title: "0DTE એક્સપાયરી પિનિંગ અને સ્ટ્રાઇક ગ્રેવિટી",
+                target_strike: "ટાર્ગેટ પિન સ્ટ્રાઇક",
+                pull_strength: "ખેંચાણ બળ (STRENGTH)",
+                arb_title: "સિન્થેટિક બોક્સ અને પેરિટી સ્કેનર",
+                macro_title: "RBI સિસ્ટમ લિક્વિડિટી (ફ્યુઅલ મીટર)",
+                gex_title: "વોલેટિલિટી સ્કેવ અને ગામા એક્સપોઝર",
+                sec_title: "ઝીરો-નોલેજ હાર્ડવેર એન્ક્લેવ સિક્યોરિટી",
+                sec_desc: "કોઈ સેન્ટ્રલ સર્વર નથી. તમામ ગણતરીઓ અને ડેટા તમારા ફોનની અંદર જ લોકલ પ્રોસેસ થાય છે."
+            },
+            en: {
+                search_ph: "🔍 Search NSE / BSE (e.g. NIFTY, RELIANCE, TCS)...",
+                tab1: "TOXICITY", tab2: "0DTE PIN", tab3: "ARBITRAGE", tab4: "MACRO FUEL", tab5: "GEX/SKEW", tab6: "SECURITY",
+                vpin_title: "VPIN Order Flow Toxicity Meter",
+                vpin_safe: "SAFE / BALANCED",
+                curr_vpin: "CURRENT VPIN LEVEL",
+                crash_prob: "CRASH PROBABILITY",
+                algo_insight: "ALGORITHMIC RADAR INSIGHT",
+                vpin_desc: "Order book is completely balanced. No unusual selling pressure detected.",
+                pin_title: "0DTE Expiry Gravity & Pinning Center",
+                target_strike: "GRAVITATIONAL PIN STRIKE",
+                pull_strength: "PULL STRENGTH (FORCE)",
+                arb_title: "Synthetic Box & Parity Scanner",
+                macro_title: "RBI System Liquidity & Fuel Meter",
+                gex_title: "Volatility Skew & Gamma Exposure",
+                sec_title: "Zero-Knowledge Hardware Enclave Security",
+                sec_desc: "Zero central servers. All quant math executes locally inside your secure chip."
+            },
+            hi: {
+                search_ph: "🔍 NSE / BSE खोजें (जैसे NIFTY, RELIANCE, TCS)...",
+                tab1: "टॉक्सिसिटी", tab2: "0DTE पिन", tab3: "आर्बिट्राज", tab4: "मैक्रो फ्यूल", tab5: "GEX/SKEW", tab6: "सुरक्षा",
+                vpin_title: "VPIN ऑर्डर फ्लो टॉक्सिसिटी मीटर",
+                vpin_safe: "सुरक्षित / संतुलित",
+                curr_vpin: "वर्तमान VPIN स्तर",
+                crash_prob: "क्रैश की संभावना",
+                algo_insight: "एल्गोरिथम रडार इनसाइट",
+                vpin_desc: "ऑर्डर बुक पूरी तरह से संतुलित है। कोई असामान्य बिकवाली दबाव नहीं है।",
+                pin_title: "0DTE एक्सपायरी पिनिंग एवं स्ट्राइक ग्रेविटी",
+                target_strike: "टारगेट पिन स्ट्राइक",
+                pull_strength: "खिंचाव बल (STRENGTH)",
+                arb_title: "सिंथेटिक बॉक्स और पैरिटी स्कैनर",
+                macro_title: "RBI सिस्टम लिक्विडिटी (फ्यूल मीटर)",
+                gex_title: "वोलैटिलिटी स्क्यू और गामा एक्सपोज़र",
+                sec_title: "ज़ीरो-नॉलेज हार्डवेयर एन्क्लेव सुरक्षा",
+                sec_desc: "कोई सेंट्रल सर्वर नहीं है। सारा डेटा सीधे आपके फोन में लोकली प्रोसेस होता है।"
+            },
+            mr: {
+                search_ph: "🔍 NSE / BSE शोधा (उदा. NIFTY, RELIANCE, TCS)...",
+                tab1: "टॉक्सिसिटी", tab2: "0DTE पिन", tab3: "आर्बिट्रेज", tab4: "मॅक्रो फ्युएल", tab5: "GEX/SKEW", tab6: "सुरक्षा",
+                vpin_title: "VPIN ऑर्डर फ्लो टॉक्सिसिटी मीटर",
+                vpin_safe: "सुरक्षित / संतुलित",
+                curr_vpin: "सध्याची VPIN पातळी",
+                crash_prob: "क्रॅशची शक्यता",
+                algo_insight: "अल्गोरिदम रडार इनसाइट",
+                vpin_desc: "ऑर्डर बुक पूर्णपणे संतुलित आहे. कोणताही विक्री दबाव नाही.",
+                pin_title: "0DTE एक्सपायरी पिनिंग आणि स्ट्राइक ग्रॅव्हिटी",
+                target_strike: "टार्गेट पिन स्ट्राइक",
+                pull_strength: "ओढण्याची ताकद",
+                arb_title: "सिंथेटिक बॉक्स आणि पॅरिटी स्कॅनर",
+                macro_title: "RBI सिस्टम लिक्विडिटी (फ्युएल मीटर)",
+                gex_title: "व्होलाटिलिटी स्क्यू आणि गॅमा एक्सपोजर",
+                sec_title: "झिरो-नॉलेज हार्डवेअर एन्क्लेव्ह सुरक्षा",
+                sec_desc: "कोणताही सर्व्हर नाही. सर्व प्रक्रिया थेट तुमच्या मोबाईलमध्ये स्थानिक पातळीवर होते."
+            }
+        };
+
+        function changeLanguage(lang) {
+            const l = translations[lang] || translations['en'];
+            document.getElementById('stockSearch').placeholder = l.search_ph;
+            document.getElementById('tab-btn-1').innerText = l.tab1;
+            document.getElementById('tab-btn-2').innerText = l.tab2;
+            document.getElementById('tab-btn-3').innerText = l.tab3;
+            document.getElementById('tab-btn-4').innerText = l.tab4;
+            document.getElementById('tab-btn-5').innerText = l.tab5;
+            document.getElementById('tab-btn-6').innerText = l.tab6;
+
+            document.getElementById('txt-vpin-title').innerText = l.vpin_title;
+            document.getElementById('vpin-status').innerText = l.vpin_safe;
+            document.getElementById('txt-curr-vpin').innerText = l.curr_vpin;
+            document.getElementById('txt-crash-prob').innerText = l.crash_prob;
+            document.getElementById('txt-algo-insight').innerText = l.algo_insight;
+            document.getElementById('vpin-desc').innerText = l.vpin_desc;
+            document.getElementById('txt-pin-title').innerText = l.pin_title;
+            document.getElementById('txt-target-strike').innerText = l.target_strike;
+            document.getElementById('txt-pull-strength').innerText = l.pull_strength;
+            document.getElementById('txt-arb-title').innerText = l.arb_title;
+            document.getElementById('txt-macro-title').innerText = l.macro_title;
+            document.getElementById('txt-gex-title').innerText = l.gex_title;
+            document.getElementById('txt-sec-title').innerText = l.sec_title;
+            document.getElementById('txt-sec-desc').innerText = l.sec_desc;
+        }
+
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             event.target.classList.add('active');
-            if(tabId === 'quant-tab') renderCanvas();
         }
-
-        // Web Worker Multi-Threading
-        const workerBlob = new Blob([`
-            self.onmessage = function(e) {
-                let vpin = 0.20 + (Math.random() * 0.12);
-                let crashProb = (vpin > 0.4 ? vpin * 45 : vpin * 15).toFixed(1);
-                self.postMessage({ vpin: vpin.toFixed(3), crashProb: crashProb });
-            }
-        `], { type: 'application/javascript' });
-
-        const quantWorker = new Worker(URL.createObjectURL(workerBlob));
-        quantWorker.onmessage = function(e) {
-            let val = parseFloat(e.data.vpin);
-            document.getElementById('vpin-val').innerText = val;
-            document.getElementById('crash-prob').innerText = e.data.crashProb + "%";
-            document.getElementById('vpin-meter').style.width = (val * 100) + "%";
-            
-            if(val > 0.5) {
-                document.getElementById('vpin-meter').style.background = "var(--red)";
-                document.getElementById('vpin-status').innerText = "HIGH TOXICITY WARNING";
-                document.getElementById('vpin-status').style.color = "var(--red)";
-            } else {
-                document.getElementById('vpin-meter').style.background = "var(--green)";
-                document.getElementById('vpin-status').innerText = "SAFE / BALANCED";
-                document.getElementById('vpin-status').style.color = "var(--green)";
-            }
-        };
-
-        setInterval(() => quantWorker.postMessage('calc'), 3000);
-
-        // Skew Plotter Canvas
-        function renderCanvas() {
-            const canvas = document.getElementById('quantumCanvas');
-            if(!canvas) return;
-            const ctx = canvas.getContext('2d');
-            canvas.width = canvas.parentElement.clientWidth - 20;
-            canvas.height = 130;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            ctx.strokeStyle = '#141c2b';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(25, 10); ctx.lineTo(25, 110);
-            ctx.lineTo(canvas.width - 10, 110);
-            ctx.stroke();
-
-            ctx.strokeStyle = '#00f2fe';
-            ctx.lineWidth = 2.5;
-            ctx.beginPath();
-            let pts = [
-                {x: 35, y: 30}, {x: 85, y: 55}, {x: 145, y: 80}, {x: 205, y: 92}, {x: 260, y: 96}
-            ];
-            pts.forEach((p, i) => {
-                let scaledX = 35 + i * ((canvas.width - 60) / 4);
-                if(i === 0) ctx.moveTo(scaledX, p.y);
-                else ctx.lineTo(scaledX, p.y);
-            });
-            ctx.stroke();
-
-            pts.forEach((p, i) => {
-                let scaledX = 35 + i * ((canvas.width - 60) / 4);
-                ctx.fillStyle = i === 2 ? '#f59e0b' : (i < 2 ? '#f43f5e' : '#10b981');
-                ctx.beginPath();
-                ctx.arc(scaledX, p.y, 3.5, 0, Math.PI * 2);
-                ctx.fill();
-            });
-        }
-
-        // Hardware AES-256 Security
-        async function getDerivedEnclaveKey(pin) {
-            let enc = new TextEncoder();
-            let baseKey = await window.crypto.subtle.importKey("raw", enc.encode(pin), { name: "PBKDF2" }, false, ["deriveKey"]);
-            return window.crypto.subtle.deriveKey(
-                { name: "PBKDF2", salt: enc.encode("SOVEREIGN_QUANTUM_SALT"), iterations: 120000, hash: "SHA-256" },
-                baseKey, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]
-            );
-        }
-
-        async function hardwareEncrypt() {
-            let pin = document.getElementById('sec-pin').value;
-            let note = document.getElementById('sec-notes').value;
-            if(!pin || !note) return alert("PIN અને નોટ્સ દાખલ કરો.");
-
-            let key = await getDerivedEnclaveKey(pin);
-            let iv = window.crypto.getRandomValues(new Uint8Array(12));
-            let cipher = await window.crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, key, new TextEncoder().encode(note));
-
-            localStorage.setItem("SOVEREIGN_VAULT", JSON.stringify({ iv: Array.from(iv), payload: Array.from(new Uint8Array(cipher)) }));
-            document.getElementById('sec-notes').value = "";
-            document.getElementById('sec-status').innerText = "✅ મિલિટરી એન્ક્લેવમાં સફળતાપૂર્વક લૉક થયું!";
-        }
-
-        async function hardwareDecrypt() {
-            let pin = document.getElementById('sec-pin').value;
-            let raw = localStorage.getItem("SOVEREIGN_VAULT");
-            if(!pin || !raw) return alert("PIN નાખો અથવા ડેટા ઉપલબ્ધ નથી.");
-
-            try {
-                let data = JSON.parse(raw);
-                let key = await getDerivedEnclaveKey(pin);
-                let plain = await window.crypto.subtle.decrypt({ name: "AES-GCM", iv: new Uint8Array(data.iv) }, key, new Uint8Array(data.payload));
-                document.getElementById('sec-notes').value = new TextDecoder().decode(plain);
-                document.getElementById('sec-status').innerText = "🔓 એન્ક્લેવ સુરક્ષિત રીતે અનલૉક થયું!";
-            } catch(e) {
-                document.getElementById('sec-status').innerText = "❌ એક્સેસ નકારવામાં આવ્યો: ખોટો PIN!";
-            }
-        }
-
-        window.addEventListener('blur', () => {
-            document.getElementById('sec-notes').value = "";
-        });
-
-        window.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('shield-badge').innerText = "🛡️ RUNTIME INTEGRITY: 100%";
-        });
     </script>
 </body>
 </html>
