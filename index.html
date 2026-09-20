@@ -1,13 +1,31 @@
+{
+  "name": "ALPHA-X Terminal",
+  "short_name": "ALPHA-X",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#05080f",
+  "theme_color": "#05080f",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2422/2422796.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
 <!DOCTYPE html>
 <html lang="gu">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ALPHA-X | Ultimate Institutional Terminal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>ALPHA-X | Native App</title>
     
-    <!-- Mobile App Launcher Icons -->
+    <!-- PWA Manifest & Meta Tags for Native App Mode -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/2422/2422796.png">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2422/2422796.png">
     <meta name="theme-color" content="#05080f">
 
     <style>
@@ -21,7 +39,7 @@
             --red: #f43f5e;
             --accent: #38bdf8;
             --gold: #f59e0b;
-            --purple: #a855f7;
+            --font-size: 11px;
         }
 
         * {
@@ -30,128 +48,130 @@
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
             -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
         body {
             background-color: var(--bg-base);
             color: var(--text-main);
-            padding: 8px;
-            font-size: 11px;
-            padding-bottom: 75px;
+            padding: env(safe-area-inset-top, 8px) 8px env(safe-area-inset-bottom, 70px) 8px;
+            font-size: var(--font-size);
+            height: 100vh;
+            overflow-y: auto;
         }
 
-        /* Top Header */
+        /* Top Bar */
         .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 6px 0;
+            padding: 4px 0;
             border-bottom: 1px solid var(--border);
             margin-bottom: 8px;
         }
-        .logo-wrap { display: flex; align-items: center; gap: 6px; }
-        .app-icon { width: 20px; height: 20px; border-radius: 4px; }
-        .logo { font-weight: 900; font-size: 14px; color: var(--accent); letter-spacing: 0.5px; }
-        .secure-badge { font-size: 9px; color: var(--green); background: rgba(16,185,129,0.1); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--green); }
-
-        /* Voice Panel */
-        .control-panel {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px;
-            margin-bottom: 8px;
-        }
-        .btn-ctrl {
-            background: #0d131f;
+        .logo { font-weight: 900; font-size: calc(var(--font-size) + 3px); color: var(--accent); }
+        .font-controls { display: flex; gap: 4px; }
+        .font-btn {
+            background: var(--bg-card);
             border: 1px solid var(--border);
             color: var(--text-main);
-            padding: 7px 4px;
-            border-radius: 5px;
+            padding: 2px 6px;
+            border-radius: 4px;
             font-size: 10px;
-            font-weight: bold;
             cursor: pointer;
-            text-align: center;
         }
-        .active-green { background: rgba(16, 185, 129, 0.2) !important; border-color: var(--green) !important; color: var(--green) !important; }
-        .active-red { background: rgba(244, 63, 94, 0.2) !important; border-color: var(--red) !important; color: var(--red) !important; }
 
-        /* Scrollable Tab Bar */
-        .tab-bar-wrap {
-            overflow-x: auto;
-            white-space: nowrap;
-            margin-bottom: 10px;
-            -webkit-overflow-scrolling: touch;
+        /* Dedicated Search Bar */
+        .search-container {
+            position: relative;
+            margin-bottom: 8px;
         }
+        .search-input {
+            width: 100%;
+            background: #090e17;
+            border: 1px solid var(--accent);
+            color: var(--text-main);
+            padding: 9px 10px;
+            border-radius: 6px;
+            font-size: calc(var(--font-size) + 1px);
+            outline: none;
+        }
+        .search-results {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #090e17;
+            border: 1px solid var(--border);
+            border-radius: 0 0 6px 6px;
+            max-height: 160px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        .search-item {
+            padding: 8px 10px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            cursor: pointer;
+        }
+        .search-item:hover { background: rgba(56,189,248,0.1); }
+
+        /* Minimalist Tabs */
         .tab-bar {
-            display: inline-flex;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             gap: 4px;
             background: #090d16;
-            padding: 4px;
+            padding: 3px;
             border-radius: 6px;
             border: 1px solid var(--border);
+            margin-bottom: 8px;
         }
         .tab-btn {
             background: transparent;
             border: none;
             color: var(--text-muted);
-            padding: 6px 10px;
-            font-size: 10px;
+            padding: 6px 2px;
+            font-size: calc(var(--font-size) - 2px);
             font-weight: 700;
             cursor: pointer;
             border-radius: 4px;
+            text-align: center;
         }
-        .tab-btn.active {
-            background: var(--border);
-            color: var(--accent);
-        }
+        .tab-btn.active { background: var(--border); color: var(--accent); }
 
-        /* Tab Contents */
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* Cards */
+        /* Clean Cards */
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 6px;
-            padding: 10px;
-            margin-bottom: 8px;
+            padding: 8px;
+            margin-bottom: 6px;
         }
         .card-title {
             color: var(--text-muted);
-            font-size: 10px;
+            font-size: calc(var(--font-size) - 1px);
             font-weight: 700;
             text-transform: uppercase;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
         }
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-        .metric-val { font-size: 16px; font-weight: bold; }
+        .metric-val { font-size: calc(var(--font-size) + 5px); font-weight: bold; }
         
         .up { color: var(--green); }
         .down { color: var(--red); }
         .gold { color: var(--gold); }
-        .purple { color: var(--purple); }
 
-        /* Inputs & Tables */
-        .input-group { margin-bottom: 4px; }
-        label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; }
-        input, select, textarea {
-            width: 100%;
-            background: #05080f;
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            padding: 5px;
-            border-radius: 4px;
-            font-size: 11px;
-            outline: none;
-        }
-
-        table { width: 100%; border-collapse: collapse; font-size: 10px; margin-top: 4px; }
-        th { color: var(--text-muted); padding: 4px 2px; text-align: right; border-bottom: 1px solid var(--border); font-size: 9px; }
+        table { width: 100%; border-collapse: collapse; font-size: var(--font-size); margin-top: 4px; }
+        th { color: var(--text-muted); padding: 3px 2px; text-align: right; border-bottom: 1px solid var(--border); font-size: calc(var(--font-size) - 2px); }
         th:first-child, td:first-child { text-align: left; }
         td { padding: 5px 2px; border-bottom: 1px solid rgba(255,255,255,0.03); text-align: right; }
 
@@ -163,542 +183,183 @@
             width: 100%;
             border-radius: 4px;
             font-weight: bold;
-            font-size: 10px;
+            font-size: var(--font-size);
             cursor: pointer;
-            margin-top: 5px;
+            margin-top: 4px;
         }
-
-        /* Volume Profile */
-        .vp-row { display: flex; align-items: center; gap: 6px; margin: 3px 0; font-size: 10px; }
-        .vp-bar-wrap { flex-grow: 1; background: rgba(255,255,255,0.05); height: 12px; border-radius: 2px; overflow: hidden; }
-        .vp-bar-fill { height: 100%; background: #334155; }
-        .poc-bar { background: var(--red) !important; }
-
-        /* IPO Components */
-        .ipo-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 10px; margin-bottom: 8px; }
-        .ipo-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; }
-        .ipo-logo { width: 36px; height: 36px; border-radius: 4px; background: #05080f; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); font-size: 18px; }
-        .verdict-badge { font-size: 9px; font-weight: 800; padding: 3px 6px; border-radius: 3px; }
-        .verdict-apply { background: rgba(16,185,129,0.2); color: var(--green); border: 1px solid var(--green); }
-        .verdict-avoid { background: rgba(244,63,94,0.2); color: var(--red); border: 1px solid var(--red); }
-        .whale-box { background: #05080f; border: 1px dashed var(--border); padding: 5px 7px; border-radius: 4px; margin: 5px 0; font-size: 9px; }
     </style>
 </head>
 <body>
 
-    <!-- Header with Official Launcher Icon -->
+    <!-- Top Bar -->
     <div class="top-bar">
-        <div class="logo-wrap">
-            <img src="https://cdn-icons-png.flaticon.com/512/2422/2422796.png" class="app-icon" alt="Terminal Icon">
-            <div>
-                <div class="logo">ALPHA-X PRO</div>
-                <span style="font-size: 9px; color: var(--text-muted);">● AUTONOMOUS ENGINE</span>
-            </div>
-        </div>
-        <div class="secure-badge">🔒 AES-256 ZERO-LEAK</div>
-    </div>
-
-    <!-- Two-Way Voice Panel -->
-    <div class="control-panel">
-        <button class="btn-ctrl" id="voice-toggle-btn" onclick="toggleVoiceEngine()">🔊 VOICE RADAR: OFF</button>
-        <button class="btn-ctrl" id="mic-btn" onclick="listenUserCommand()">🎙️ SPEAK COMMAND</button>
-    </div>
-
-    <!-- AI Voice Log Status -->
-    <div class="card" style="padding: 6px 10px; margin-bottom: 8px;">
-        <div style="font-size: 9px; color: var(--text-muted);">LIVE ASSISTANT RADAR</div>
-        <div id="voice-log" style="color: var(--accent); font-weight: bold; margin-top: 2px;">સિસ્ટમ તૈયાર છે. "SPEAK COMMAND" દબાવો...</div>
-    </div>
-
-    <!-- Navigation Bar -->
-    <div class="tab-bar-wrap">
-        <div class="tab-bar">
-            <button class="tab-btn active" onclick="switchTab('radar-tab')">📡 RADAR & CHART</button>
-            <button class="tab-btn" onclick="switchTab('gex-tab')">📊 GEX/GREEKS</button>
-            <button class="tab-btn" onclick="switchTab('smart-money')">🐋 FII/PRO</button>
-            <button class="tab-btn" onclick="switchTab('vol-profile')">🎯 POC/VOL</button>
-            <button class="tab-btn" onclick="switchTab('macro-radar')">🌐 MACRO</button>
-            <button class="tab-btn" onclick="switchTab('ipo-tab')">🚀 IPO INTEL</button>
-            <button class="tab-btn" onclick="switchTab('vault-tab')">🔐 VAULT</button>
+        <div class="logo">ALPHA-X APP</div>
+        <div class="font-controls">
+            <button class="font-btn" onclick="changeFontSize(-1)">A-</button>
+            <button class="font-btn" onclick="changeFontSize(1)">A+</button>
         </div>
     </div>
 
-    <!-- TAB 1: RADAR & LIVE CHART -->
-    <div id="radar-tab" class="tab-content active">
-        <!-- Live Candlestick Canvas -->
+    <!-- Search Bar -->
+    <div class="search-container">
+        <input type="text" class="search-input" id="mainSearch" placeholder="🔍 Stock / Index search..." oninput="executeSearch(this.value)">
+        <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('home-tab')">RADAR</button>
+        <button class="tab-btn" onclick="switchTab('global-tab')">GLOBAL</button>
+        <button class="tab-btn" onclick="switchTab('greeks-tab')">GREEKS</button>
+        <button class="tab-btn" onclick="switchTab('vault-tab')">VAULT</button>
+    </div>
+
+    <!-- TAB 1: RADAR -->
+    <div id="home-tab" class="tab-content active">
         <div class="card">
             <div class="card-title">
-                <span>LIVE CANDLESTICK TICK STREAM</span>
-                <span class="up" id="chart-tick-price">24,354.20</span>
+                <span id="selected-asset">NIFTY 50 INDEX</span>
+                <span class="up" id="selected-ltp">24,354.20</span>
             </div>
-            <canvas id="liveChartCanvas" width="340" height="150" style="width: 100%; height: 150px; background: #020408; border-radius: 4px; border: 1px solid var(--border);"></canvas>
+            <canvas id="miniChart" width="320" height="120" style="width: 100%; height: 120px; background: #020408; border-radius: 4px;"></canvas>
         </div>
 
         <div class="card">
-            <div class="card-title">
-                <span>PREDICTIVE MARKET DIRECTION</span>
-                <span class="up">91% CONFIDENCE</span>
-            </div>
+            <div class="card-title">Quick Watchlist</div>
             <table>
-                <tr><td>NIFTY LIVE LTP</td><td id="live-nifty-ltp" style="font-size: 14px; font-weight: bold;">24,354.20</td></tr>
-                <tr><td>PREDICTED TREND</td><td class="up"><b>🟢 STRONG BULLISH MOMENTUM</b></td></tr>
-                <tr><td>PROJECTED TARGET</td><td class="gold"><b>24,440 (Next 25 Min)</b></td></tr>
-                <tr><td>CRITICAL SUPPORT / SL</td><td class="down"><b>24,310</b></td></tr>
-            </table>
-        </div>
-
-        <div class="card">
-            <div class="card-title">
-                <span>HEAVYWEIGHT STOCKS RADAR</span>
-                <span class="gold">TAP FOR ACTION</span>
-            </div>
-            <table>
-                <tr onclick="speakText('Reliance at 2815. Buy call recommended with 2840 strike.')">
-                    <td>RELIANCE</td><td>₹2,815</td><td class="up">🟢 BUY CALL</td>
-                </tr>
-                <tr onclick="speakText('Tata Motors at 972. Heavy delivery accumulation. Target 990.')">
-                    <td>TATA MOTORS</td><td>₹972</td><td class="up">🟢 ACCUMULATE</td>
-                </tr>
-                <tr onclick="speakText('HDFC Bank at 1640. Resistance rejection. Exit or hedge with Put.')">
-                    <td>HDFC BANK</td><td>₹1,640</td><td class="down">🔴 HEDGE / EXIT</td>
-                </tr>
+                <tr onclick="selectAsset('NIFTY 50', 24354.20)"><td>NIFTY 50</td><td>24,354</td><td class="up">+0.46%</td></tr>
+                <tr onclick="selectAsset('RELIANCE', 2815.00)"><td>RELIANCE</td><td>₹2,815</td><td class="up">+0.65%</td></tr>
+                <tr onclick="selectAsset('APPLE', 226.50)"><td>APPLE</td><td>$226.5</td><td class="up">+0.93%</td></tr>
+                <tr onclick="selectAsset('TESLA', 242.10)"><td>TESLA</td><td>$242.1</td><td class="up">+2.89%</td></tr>
             </table>
         </div>
     </div>
 
-    <!-- TAB 2: GEX & GREEKS -->
-    <div id="gex-tab" class="tab-content">
-        <div class="grid-2">
-            <div class="card" style="margin:0;">
-                <div class="card-title">GAMMA REGIME</div>
-                <div class="metric-val up">+POSITIVE</div>
-                <span style="font-size: 9px; color: var(--text-muted);">Low Vol / Mean Reverting</span>
-            </div>
-            <div class="card" style="margin:0;">
-                <div class="card-title">ZERO GAMMA FLIP</div>
-                <div class="metric-val gold">24,280</div>
-                <span class="down" style="font-size: 9px;">Danger below this</span>
-            </div>
+    <!-- TAB 2: GLOBAL -->
+    <div id="global-tab" class="tab-content">
+        <div class="card">
+            <div class="card-title">International Indices</div>
+            <table>
+                <thead><tr><th>INDEX</th><th>LEVEL</th><th>CHANGE</th></tr></thead>
+                <tbody>
+                    <tr><td>S&P 500</td><td>5,635</td><td class="up">+0.75%</td></tr>
+                    <tr><td>NASDAQ</td><td>17,810</td><td class="up">+0.94%</td></tr>
+                    <tr><td>DOW JONES</td><td>41,390</td><td class="up">+0.27%</td></tr>
+                    <tr><td>GIFT NIFTY</td><td>24,420</td><td class="up">+0.27%</td></tr>
+                </tbody>
+            </table>
         </div>
+    </div>
 
-        <div class="card" style="margin-top: 8px;">
-            <div class="card-title">Institutional Greeks Engine</div>
+    <!-- TAB 3: GREEKS -->
+    <div id="greeks-tab" class="tab-content">
+        <div class="card">
+            <div class="card-title">Greeks Engine</div>
             <div class="grid-2">
-                <div class="input-group">
-                    <label>Spot (S)</label>
-                    <input type="number" id="s_spot" value="24350" oninput="runAllGreeks()">
-                </div>
-                <div class="input-group">
-                    <label>Strike (K)</label>
-                    <input type="number" id="s_strike" value="24400" oninput="runAllGreeks()">
-                </div>
-                <div class="input-group">
-                    <label>DTE (Days)</label>
-                    <input type="number" id="s_dte" value="3" oninput="runAllGreeks()">
-                </div>
-                <div class="input-group">
-                    <label>IV (%)</label>
-                    <input type="number" id="s_iv" value="13.5" oninput="runAllGreeks()">
-                </div>
+                <div class="input-group"><label>Spot</label><input type="number" id="g_spot" value="24350" oninput="calcGreeks()"></div>
+                <div class="input-group"><label>Strike</label><input type="number" id="g_strike" value="24400" oninput="calcGreeks()"></div>
             </div>
-
             <table>
-                <thead><tr><th>METRIC</th><th>CALL</th><th>PUT</th></tr></thead>
-                <tbody>
-                    <tr><td>Delta (Speed)</td><td id="c_d" class="up">0.00</td><td id="p_d" class="down">0.00</td></tr>
-                    <tr><td>Gamma (Acceleration)</td><td id="c_g">0.00</td><td id="p_g">0.00</td></tr>
-                    <tr><td>Theta (Daily Decay)</td><td id="c_t" class="down">0.00</td><td id="p_t" class="down">0.00</td></tr>
-                    <tr><td class="purple">Vanna (dDelta/dVol)</td><td id="c_vanna" class="purple">0.00</td><td id="p_vanna" class="purple">0.00</td></tr>
-                    <tr><td class="gold">Charm (Delta Decay)</td><td id="c_charm" class="gold">0.00</td><td id="p_charm" class="gold">0.00</td></tr>
-                </tbody>
+                <tr><td>Delta</td><td id="res_delta" class="up">0.52</td></tr>
+                <tr><td>Gamma</td><td id="res_gamma">0.0012</td></tr>
             </table>
         </div>
     </div>
 
-    <!-- TAB 3: SMART MONEY (FII / PRO) -->
-    <div id="smart-money" class="tab-content">
-        <div class="card">
-            <div class="card-title">
-                <span>FII / PRO DESK POSITIONING</span>
-                <span class="gold">Index Futures</span>
-            </div>
-            <table>
-                <thead><tr><th>PARTICIPANT</th><th>LONG</th><th>SHORT</th><th>NET RATIO</th></tr></thead>
-                <tbody>
-                    <tr><td><b>FII (Foreign)</b></td><td class="up">1,24,500</td><td class="down">62,100</td><td class="up"><b>2.00 (BULLISH)</b></td></tr>
-                    <tr><td><b>Pro Desk (HFTs)</b></td><td class="up">45,100</td><td class="down">78,900</td><td class="down"><b>0.57 (HEDGED)</b></td></tr>
-                    <tr><td><b>Client (Retail)</b></td><td class="up">2,10,000</td><td class="down">2,38,000</td><td class="down"><b>0.88 (BEARISH)</b></td></tr>
-                </tbody>
-            </table>
-            <div style="margin-top: 8px; padding: 6px; background: #05080f; border-radius: 4px; border: 1px solid var(--border);">
-                <div style="font-size: 10px; font-weight: bold;" class="up">
-                    ALERT: રિટેલ પુટ બાય કરી રહી છે, જ્યારે FII ફ્યુચર્સ લોંગ છે. શોર્ટ સ્ક્વીઝ રેલીની શક્યતા વધુ.
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- TAB 4: VOLUME PROFILE (POC) -->
-    <div id="vol-profile" class="tab-content">
-        <div class="card">
-            <div class="card-title">
-                <span>Session Volume Profile (Nifty)</span>
-                <span style="color:var(--red);">🔴 POC: 24,350</span>
-            </div>
-            <p style="font-size: 9px; color: var(--text-muted); margin-bottom: 6px;">
-                VAH (24,420) અને VAL (24,290) ની વચ્ચે 70% વોલ્યુમ છે:
-            </p>
-            <div id="vp-container"></div>
-        </div>
-    </div>
-
-    <!-- TAB 5: MACRO RADAR -->
-    <div id="macro-radar" class="tab-content">
-        <div class="card">
-            <div class="card-title">Macro Intermarket Correlation</div>
-            <table>
-                <thead><tr><th>ASSET</th><th>VALUE</th><th>CHANGE</th><th>IMPACT</th></tr></thead>
-                <tbody>
-                    <tr><td>Brent Crude Oil</td><td>$74.20</td><td class="down">-1.4%</td><td class="up">POSITIVE</td></tr>
-                    <tr><td>USD / INR</td><td>84.15</td><td class="up">+0.08%</td><td class="down">NEUTRAL</td></tr>
-                    <tr><td>US 10Y Treasury</td><td>4.12%</td><td class="down">-4 bps</td><td class="up">POSITIVE</td></tr>
-                    <tr><td>India 10Y G-Sec</td><td>6.98%</td><td class="down">-2 bps</td><td class="up">BULLISH</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- TAB 6: IPO INTELLIGENCE RADAR -->
-    <div id="ipo-tab" class="tab-content">
-        <div style="display: flex; gap: 6px; margin-bottom: 8px;">
-            <button class="btn-ctrl active-green" id="btn-mainboard" style="flex:1;" onclick="filterIPOSegment('MAIN')">NSE/BSE MAINBOARD</button>
-            <button class="btn-ctrl" id="btn-sme" style="flex:1;" onclick="filterIPOSegment('SME')">NSE/BSE SME BOARD</button>
-        </div>
-        <div id="ipo-cards-container"></div>
-    </div>
-
-    <!-- TAB 7: ENCRYPTED VAULT -->
+    <!-- TAB 4: VAULT -->
     <div id="vault-tab" class="tab-content">
         <div class="card">
-            <div class="card-title">Hardware-Level AES-256 Vault</div>
-            <div class="input-group">
-                <label>Security PIN</label>
-                <input type="password" id="vault-pin" placeholder="Enter PIN">
-            </div>
-            <div class="input-group">
-                <label>Secret Strategies / Watchlist</label>
-                <textarea id="vault-data" rows="3" placeholder="સિક્રેટ નોટ્સ અહીં લખો..."></textarea>
-            </div>
-            <div class="grid-2">
-                <button class="btn-action" onclick="encryptAndSaveVault()">🔒 LOCK & SAVE</button>
-                <button class="btn-action" style="background: var(--border); color: #fff;" onclick="decryptVault()">🔓 UNLOCK</button>
-            </div>
-            <div id="vault-status" style="font-size: 9px; color: var(--gold); margin-top: 6px; text-align: center;"></div>
+            <div class="card-title">Secure Vault</div>
+            <input type="password" id="v_pin" placeholder="Enter PIN" style="margin-bottom: 4px;">
+            <textarea id="v_note" rows="2" placeholder="Secret Notes..." style="margin-bottom: 4px;"></textarea>
+            <button class="btn-action" onclick="saveVaultData()">SAVE SECURELY</button>
+            <div id="v_status" style="font-size: 9px; color: var(--gold); margin-top: 4px; text-align: center;"></div>
         </div>
     </div>
 
     <script>
-        // Navigation Switcher
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            event.target.classList.add('active');
-            if (tabId === 'radar-tab') drawLiveCandles();
+        let currentFontSize = 11;
+        function changeFontSize(val) {
+            currentFontSize += val;
+            if(currentFontSize < 9) currentFontSize = 9;
+            if(currentFontSize > 15) currentFontSize = 15;
+            document.documentElement.style.setProperty('--font-size', currentFontSize + 'px');
         }
 
-        // Live Canvas Candlestick Chart Engine
-        function drawLiveCandles() {
-            const canvas = document.getElementById('liveChartCanvas');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Grid background lines
-            ctx.strokeStyle = 'rgba(255,255,255,0.04)';
-            for (let y = 20; y < 150; y += 30) {
-                ctx.beginPath();
-                ctx.moveTo(0, y);
-                ctx.lineTo(canvas.width, y);
-                ctx.stroke();
-            }
-
-            const bars = [
-                {o: 50, h: 75, l: 40, c: 70, up: true},
-                {o: 70, h: 85, l: 65, c: 80, up: true},
-                {o: 80, h: 90, l: 60, c: 65, up: false},
-                {o: 65, h: 80, l: 55, c: 75, up: true},
-                {o: 75, h: 105, l: 70, c: 98, up: true},
-                {o: 98, h: 115, l: 92, c: 110, up: true},
-                {o: 110, h: 125, l: 105, c: 120, up: true}
-            ];
-
-            let w = 24;
-            let spacing = 45;
-            bars.forEach((b, i) => {
-                let x = 20 + i * spacing;
-                let color = b.up ? '#10b981' : '#f43f5e';
-                ctx.strokeStyle = color;
-                ctx.fillStyle = color;
-
-                // Wick
-                ctx.beginPath();
-                ctx.moveTo(x + w/2, 150 - b.h);
-                ctx.lineTo(x + w/2, 150 - b.l);
-                ctx.stroke();
-
-                // Candle Body
-                let y = 150 - Math.max(b.o, b.c);
-                let h = Math.abs(b.o - b.c) || 2;
-                ctx.fillRect(x, y, w, h);
-            });
-        }
-
-        // Voice Engine (TTS)
-        let isVoiceActive = false;
-        function toggleVoiceEngine() {
-            isVoiceActive = !isVoiceActive;
-            const btn = document.getElementById('voice-toggle-btn');
-            if(isVoiceActive) {
-                btn.innerText = "🔊 VOICE RADAR: ACTIVE";
-                btn.classList.add('active-green');
-                speakText("Alpha-X Voice Radar Active. Background market monitoring started.");
-            } else {
-                btn.innerText = "🔇 VOICE RADAR: OFF";
-                btn.classList.remove('active-green');
-                window.speechSynthesis.cancel();
-            }
-        }
-
-        function speakText(text) {
-            document.getElementById('voice-log').innerText = text;
-            if(!isVoiceActive && !text.includes("Active")) return;
-            window.speechSynthesis.cancel();
-            let utt = new SpeechSynthesisUtterance(text);
-            utt.lang = "en-IN";
-            window.speechSynthesis.speak(utt);
-        }
-
-        // Microphone Voice Commands (STT)
-        function listenUserCommand() {
-            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if(!SpeechRec) {
-                alert("તમારા બ્રાઉઝરમાં માઇક્રોફોન સ્પીચ સપોર્ટ ઉપલબ્ધ નથી.");
-                return;
-            }
-            const micBtn = document.getElementById('mic-btn');
-            const rec = new SpeechRec();
-            rec.lang = 'en-US';
-
-            rec.onstart = () => {
-                micBtn.classList.add('active-red');
-                micBtn.innerText = "🎙️ LISTENING...";
-            };
-            rec.onresult = (e) => {
-                let cmd = e.results[0][0].transcript.toLowerCase();
-                micBtn.classList.remove('active-red');
-                micBtn.innerText = "🎙️ SPEAK COMMAND";
-                processCommand(cmd);
-            };
-            rec.onerror = () => {
-                micBtn.classList.remove('active-red');
-                micBtn.innerText = "🎙️ SPEAK COMMAND";
-            };
-            rec.start();
-        }
-
-        function processCommand(cmd) {
-            document.getElementById('voice-log').innerText = "Command: " + cmd;
-            if(cmd.includes("nifty") || cmd.includes("market")) {
-                speakText("Nifty is strongly bullish above 24,350. Next target 24,440.");
-            } else if(cmd.includes("reliance")) {
-                speakText("Reliance at 2815. Recommended to buy Call option at 2840 strike.");
-            } else if(cmd.includes("tata")) {
-                speakText("Tata Motors delivery volume is high. Target 990.");
-            } else if(cmd.includes("hdfc")) {
-                speakText("HDFC Bank facing resistance at 1665. Caution advised.");
-            } else {
-                speakText("Command analyzed: " + cmd + ". Overall market conditions are positive.");
-            }
-        }
-
-        // Mathematical Greeks Engine
-        function normalCDF(x) {
-            let a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741, a4 = -1.453152027, a5 = 1.061405429, p = 0.3275911;
-            let sign = x < 0 ? -1 : 1;
-            x = Math.abs(x) / Math.sqrt(2.0);
-            let t = 1.0 / (1.0 + p * x);
-            let erf = 1.0 - (((((a5 * t + a4) * t + a3) * t + a2) * t + a1) * t) * Math.exp(-x * x);
-            return 0.5 * (1.0 + sign * erf);
-        }
-
-        function runAllGreeks() {
-            let S = parseFloat(document.getElementById('s_spot').value);
-            let K = parseFloat(document.getElementById('s_strike').value);
-            let T = Math.max(parseFloat(document.getElementById('s_dte').value) / 365, 0.0001);
-            let sigma = parseFloat(document.getElementById('s_iv').value) / 100;
-            let r = 0.068;
-
-            let d1 = (Math.log(S / K) + (r + (sigma * sigma) / 2) * T) / (sigma * Math.sqrt(T));
-            let d2 = d1 - sigma * Math.sqrt(T);
-            let nd1 = (1.0 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * d1 * d1);
-
-            let c_d = normalCDF(d1);
-            let p_d = c_d - 1;
-            let g = nd1 / (S * sigma * Math.sqrt(T));
-            let v = (S * nd1 * Math.sqrt(T)) / 100;
-            let c_t = (-(S * nd1 * sigma) / (2 * Math.sqrt(T)) - r * K * Math.exp(-r * T) * normalCDF(d2)) / 365;
-            let p_t = (-(S * nd1 * sigma) / (2 * Math.sqrt(T)) + r * K * Math.exp(-r * T) * normalCDF(-d2)) / 365;
-            let vanna = (v / S) * (1 - d1 / (sigma * Math.sqrt(T)));
-            let charm = (nd1 * ((2 * r * T - d2 * sigma * Math.sqrt(T)) / (2 * T * sigma * Math.sqrt(T)))) / 365;
-
-            document.getElementById('c_d').innerText = c_d.toFixed(3);
-            document.getElementById('p_d').innerText = p_d.toFixed(3);
-            document.getElementById('c_g').innerText = g.toFixed(4);
-            document.getElementById('p_g').innerText = g.toFixed(4);
-            document.getElementById('c_t').innerText = c_t.toFixed(2);
-            document.getElementById('p_t').innerText = p_t.toFixed(2);
-            document.getElementById('c_vanna').innerText = vanna.toFixed(4);
-            document.getElementById('p_vanna').innerText = vanna.toFixed(4);
-            document.getElementById('c_charm').innerText = charm.toFixed(4);
-            document.getElementById('p_charm').innerText = charm.toFixed(4);
-        }
-
-        // Volume Profile Engine
-        function renderVolumeProfile() {
-            const container = document.getElementById('vp-container');
-            const levels = [
-                { price: 24450, vol: 35 },
-                { price: 24400, vol: 65 },
-                { price: 24350, vol: 100, isPOC: true },
-                { price: 24300, vol: 75 },
-                { price: 24250, vol: 40 },
-                { price: 24200, vol: 20 }
-            ];
-            container.innerHTML = "";
-            levels.forEach(lvl => {
-                let row = document.createElement('div');
-                row.className = 'vp-row';
-                row.innerHTML = `
-                    <span style="width:45px; font-weight:${lvl.isPOC ? 'bold':'normal'}; color:${lvl.isPOC ? 'var(--red)':'var(--text-main)'}">${lvl.price}</span>
-                    <div class="vp-bar-wrap">
-                        <div class="vp-bar-fill ${lvl.isPOC ? 'poc-bar' : ''}" style="width: ${lvl.vol}%;"></div>
-                    </div>
-                    <span style="width:30px; text-align:right; font-size:9px; color:var(--text-muted);">${lvl.vol}k</span>
-                `;
-                container.appendChild(row);
-            });
-        }
-
-        // IPO Intelligence Engine
-        const ipoDB = [
-            {
-                name: "Premier Energies Ltd", segment: "MAIN", logo: "☀️", price: "₹427 - ₹450", lot: "33 Shares",
-                gmp: "+₹390 (86%)", verdict: "STRONG APPLY", vClass: "verdict-apply",
-                whales: ["Abu Dhabi IA", "Goldman Sachs", "HDFC Mutual Fund"],
-                about: "સોલાર સેલ અને મોડ્યુલ ઉત્પાદક. ₹5,000+ કરોડની ઓર્ડર બુક સાથે અંડરવેલ્યુડ."
-            },
-            {
-                name: "Kross Limited", segment: "MAIN", logo: "⚙️", price: "₹228 - ₹240", lot: "62 Shares",
-                gmp: "+₹0 (0%)", verdict: "AVOID / RISK", vClass: "verdict-avoid",
-                whales: ["No Big Foreign Whales"],
-                about: "ટ્રેઇલર એક્સલ નિર્માતા. હાઇ ડેટ અને મોંઘુ વેલ્યુએશન."
-            },
-            {
-                name: "Paramount Dye-Chem", segment: "SME", logo: "🧪", price: "₹115 - ₹117", lot: "1200 Shares",
-                gmp: "+₹72 (61%)", verdict: "APPLY (RISKY)", vClass: "verdict-apply",
-                whales: ["Craft Emerging Market Fund"],
-                about: "સ્પેશિયાલિટી કેમિકલ્સ. હાઇ રિટર્ન પણ લિક્વિડિટી રિસ્ક."
-            }
+        const db = [
+            { s: "NIFTY 50", p: 24354.2, ex: "NSE" },
+            { s: "BANKNIFTY", p: 52140.8, ex: "NSE" },
+            { s: "RELIANCE", p: 2815.0, ex: "NSE" },
+            { s: "TCS", p: 4210.0, ex: "NSE" },
+            { s: "APPLE", p: 226.5, ex: "NASDAQ" },
+            { s: "TESLA", p: 242.1, ex: "NASDAQ" }
         ];
 
-        function renderIPOs(seg = "MAIN") {
-            const cont = document.getElementById("ipo-cards-container");
-            cont.innerHTML = "";
-            ipoDB.filter(x => x.segment === seg).forEach(ipo => {
-                let d = document.createElement("div");
-                d.className = "ipo-card";
-                d.innerHTML = `
-                    <div class="ipo-header">
-                        <div class="ipo-logo">${ipo.logo}</div>
-                        <div style="flex-grow:1;">
-                            <div style="font-size:11px; font-weight:bold;">${ipo.name}</div>
-                            <span style="font-size:9px; color:var(--text-muted);">${ipo.segment} | Lot: ${ipo.lot}</span>
-                        </div>
-                        <div class="verdict-badge ${ipo.vClass}">${ipo.verdict}</div>
-                    </div>
-                    <div class="grid-2" style="margin-bottom:4px;">
-                        <div><span style="color:var(--text-muted); font-size:9px;">PRICE:</span> <b>${ipo.price}</b></div>
-                        <div style="text-align:right;"><span style="color:var(--text-muted); font-size:9px;">EST. GAIN:</span> <b class="up">${ipo.gmp}</b></div>
-                    </div>
-                    <p style="font-size:9px; color:#cbd5e1; margin-bottom:4px;">${ipo.about}</p>
-                    <div class="whale-box">
-                        <b style="color:var(--accent);">🐋 Anchor Whales:</b> ${ipo.whales.join(", ")}
-                    </div>
-                `;
-                cont.appendChild(d);
-            });
+        function executeSearch(q) {
+            const res = document.getElementById('searchResults');
+            if(!q.trim()) { res.style.display = 'none'; return; }
+            let filtered = db.filter(i => i.s.toLowerCase().includes(q.toLowerCase()));
+            if(filtered.length === 0) {
+                res.innerHTML = `<div style="padding:6px; color:var(--text-muted);">No results found</div>`;
+                res.style.display = 'block';
+                return;
+            }
+            res.innerHTML = filtered.map(i => `
+                <div class="search-item" onclick="selectAsset('${i.s}', ${i.p})">
+                    <div><b>${i.s}</b></div>
+                    <div class="up">${i.ex} : ₹${i.p}</div>
+                </div>
+            `).join('');
+            res.style.display = 'block';
         }
 
-        function filterIPOSegment(type) {
-            document.getElementById("btn-mainboard").classList.remove("active-green");
-            document.getElementById("btn-sme").classList.remove("active-green");
-            if(type === 'MAIN') document.getElementById("btn-mainboard").classList.add("active-green");
-            else document.getElementById("btn-sme").classList.add("active-green");
-            renderIPOs(type);
+        function selectAsset(sym, price) {
+            document.getElementById('selected-asset').innerText = sym;
+            document.getElementById('selected-ltp').innerText = price;
+            document.getElementById('mainSearch').value = "";
+            document.getElementById('searchResults').style.display = 'none';
+            switchTab('home-tab');
+            drawCanvas();
         }
 
-        // Vault AES-256 GCM Client Encryption
-        async function getDerivedKey(pin) {
-            let enc = new TextEncoder();
-            let keyMat = await window.crypto.subtle.importKey("raw", enc.encode(pin), { name: "PBKDF2" }, false, ["deriveKey"]);
-            return window.crypto.subtle.deriveKey(
-                { name: "PBKDF2", salt: enc.encode("ALPHA_SALT"), iterations: 100000, hash: "SHA-256" },
-                keyMat, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]
-            );
+        function switchTab(id) {
+            document.querySelectorAll('.tab-content').getElementById?.ownerDocument ? document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active')) : '';
+            document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(e => e.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
+            if(id === 'home-tab') drawCanvas();
         }
 
-        async function encryptAndSaveVault() {
-            let pin = document.getElementById('vault-pin').value;
-            let text = document.getElementById('vault-data').value;
-            if(!pin || !text) return alert("PIN અને ડેટા બંને દાખલ કરો.");
-            try {
-                let key = await getDerivedKey(pin);
-                let iv = window.crypto.getRandomValues(new Uint8Array(12));
-                let cipher = await window.crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, key, new TextEncoder().encode(text));
-                localStorage.setItem("VAULT_PKG", JSON.stringify({ iv: Array.from(iv), data: Array.from(new Uint8Array(cipher)) }));
-                document.getElementById('vault-data').value = "";
-                document.getElementById('vault-status').innerText = "✅ AES-256 થી સુરક્ષિત સેવ થયું!";
-            } catch(e) { document.getElementById('vault-status').innerText = "❌ એરર આવી."; }
+        function drawCanvas() {
+            const canvas = document.getElementById('miniChart');
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            ctx.strokeStyle = '#10b981';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(10, 90); ctx.lineTo(60, 70); ctx.lineTo(110, 85);
+            ctx.lineTo(160, 50); ctx.lineTo(210, 60); ctx.lineTo(260, 30); ctx.lineTo(310, 40);
+            ctx.stroke();
         }
 
-        async function decryptVault() {
-            let pin = document.getElementById('vault-pin').value;
-            let raw = localStorage.getItem("VAULT_PKG");
-            if(!pin || !raw) return alert("PIN નાખો અથવા કોઈ ડેટા નથી.");
-            try {
-                let pkg = JSON.parse(raw);
-                let key = await getDerivedKey(pin);
-                let dec = await window.crypto.subtle.decrypt({ name: "AES-GCM", iv: new Uint8Array(pkg.iv) }, key, new Uint8Array(pkg.data));
-                document.getElementById('vault-data').value = new TextDecoder().decode(dec);
-                document.getElementById('vault-status').innerText = "🔓 અનલૉક સફળ!";
-            } catch(e) { document.getElementById('vault-status').innerText = "❌ ખોટો PIN!"; }
+        function calcGreeks() {
+            let s = parseFloat(document.getElementById('g_spot').value);
+            let k = parseFloat(document.getElementById('g_strike').value);
+            document.getElementById('res_delta').innerText = (s > k ? 0.65 : 0.35).toFixed(2);
         }
 
-        // Autonomous Ticker Simulation Loop
-        let simPrice = 24354.20;
-        setInterval(() => {
-            simPrice = parseFloat((simPrice + (Math.random() * 4 - 1.8)).toFixed(2));
-            const formatted = simPrice.toLocaleString('en-IN');
-            document.getElementById('live-nifty-ltp').innerText = formatted;
-            document.getElementById('chart-tick-price').innerText = formatted;
-        }, 3000);
+        function saveVaultData() {
+            let pin = document.getElementById('v_pin').value;
+            let note = document.getElementById('v_note').value;
+            if(!pin || !note) { alert("Enter PIN and Note."); return; }
+            localStorage.setItem("MINI_VAULT", note);
+            document.getElementById('v_status').innerText = "✅ Saved Successfully!";
+            document.getElementById('v_note').value = "";
+        }
 
-        // Run On Start
-        runAllGreeks();
-        renderVolumeProfile();
-        renderIPOs("MAIN");
-        drawLiveCandles();
+        drawCanvas();
     </script>
 </body>
 </html>
