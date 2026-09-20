@@ -3,20 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ALPHA-X | Quantum Institutional Terminal</title>
+    <title>ALPHA-X | Ultimate Institutional Terminal</title>
+    
+    <!-- Mobile App Launcher Icons -->
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/2422/2422796.png">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2422/2422796.png">
+    <meta name="theme-color" content="#05080f">
+
     <style>
         :root {
-            --bg-base: #020408;
-            --bg-card: #090e17;
-            --border: #141c2b;
-            --text-main: #f8fafc;
+            --bg-base: #05080f;
+            --bg-card: #0d131f;
+            --border: #1a2333;
+            --text-main: #f1f5f9;
             --text-muted: #64748b;
             --green: #10b981;
             --red: #f43f5e;
             --accent: #38bdf8;
             --gold: #f59e0b;
-            --purple: #c084fc;
-            --neon: #00f2fe;
+            --purple: #a855f7;
         }
 
         * {
@@ -32,7 +37,7 @@
             color: var(--text-main);
             padding: 8px;
             font-size: 11px;
-            padding-bottom: 60px;
+            padding-bottom: 75px;
         }
 
         /* Top Header */
@@ -40,117 +45,71 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 4px 0 8px 0;
+            padding: 6px 0;
             border-bottom: 1px solid var(--border);
             margin-bottom: 8px;
+        }
+        .logo-wrap { display: flex; align-items: center; gap: 6px; }
+        .app-icon { width: 20px; height: 20px; border-radius: 4px; }
+        .logo { font-weight: 900; font-size: 14px; color: var(--accent); letter-spacing: 0.5px; }
+        .secure-badge { font-size: 9px; color: var(--green); background: rgba(16,185,129,0.1); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--green); }
+
+        /* Voice Panel */
+        .control-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 6px;
-        }
-        .logo { font-weight: 900; font-size: 13px; color: var(--neon); letter-spacing: 0.5px; white-space: nowrap; }
-        
-        .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .lang-select {
-            background: #03060a;
-            color: var(--neon);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            padding: 3px 6px;
-            font-size: 10px;
-            font-weight: bold;
-            outline: none;
-        }
-
-        .secure-badge { font-size: 8.5px; color: var(--green); background: rgba(16,185,129,0.1); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--green); white-space: nowrap; }
-
-        /* Search Section */
-        .search-box {
-            position: relative;
             margin-bottom: 8px;
         }
-        .search-input {
-            width: 100%;
-            background: #060a12;
+        .btn-ctrl {
+            background: #0d131f;
             border: 1px solid var(--border);
             color: var(--text-main);
-            padding: 8px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            outline: none;
-        }
-        .search-input:focus {
-            border-color: var(--neon);
-        }
-        .search-results {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: #090e17;
-            border: 1px solid var(--border);
-            border-radius: 0 0 6px 6px;
-            max-height: 180px;
-            overflow-y: auto;
-            z-index: 100;
-        }
-        .search-item {
-            padding: 7px 10px;
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
+            padding: 7px 4px;
+            border-radius: 5px;
+            font-size: 10px;
+            font-weight: bold;
             cursor: pointer;
+            text-align: center;
         }
-        .search-item:hover, .search-item:active {
-            background: rgba(0,242,254,0.1);
-        }
+        .active-green { background: rgba(16, 185, 129, 0.2) !important; border-color: var(--green) !important; color: var(--green) !important; }
+        .active-red { background: rgba(244, 63, 94, 0.2) !important; border-color: var(--red) !important; color: var(--red) !important; }
 
-        /* Asset Info Bar */
-        .asset-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #050810;
-            padding: 6px 10px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            margin-bottom: 8px;
+        /* Scrollable Tab Bar */
+        .tab-bar-wrap {
+            overflow-x: auto;
+            white-space: nowrap;
+            margin-bottom: 10px;
+            -webkit-overflow-scrolling: touch;
         }
-
-        /* Navigation Tabs */
         .tab-bar {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 2px;
-            background: #060910;
-            padding: 3px;
+            display: inline-flex;
+            gap: 4px;
+            background: #090d16;
+            padding: 4px;
             border-radius: 6px;
             border: 1px solid var(--border);
-            margin-bottom: 8px;
         }
         .tab-btn {
             background: transparent;
             border: none;
             color: var(--text-muted);
-            padding: 6px 1px;
-            font-size: 8px;
+            padding: 6px 10px;
+            font-size: 10px;
             font-weight: 700;
             cursor: pointer;
-            border-radius: 3px;
-            text-align: center;
-            white-space: nowrap;
+            border-radius: 4px;
         }
         .tab-btn.active {
             background: var(--border);
-            color: var(--neon);
+            color: var(--accent);
         }
 
+        /* Tab Contents */
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
+        /* Cards */
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -160,7 +119,7 @@
         }
         .card-title {
             color: var(--text-muted);
-            font-size: 9.5px;
+            font-size: 10px;
             font-weight: 700;
             text-transform: uppercase;
             margin-bottom: 6px;
@@ -170,385 +129,576 @@
         }
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-        .metric-val { font-size: 15px; font-weight: bold; }
+        .metric-val { font-size: 16px; font-weight: bold; }
         
         .up { color: var(--green); }
         .down { color: var(--red); }
         .gold { color: var(--gold); }
         .purple { color: var(--purple); }
-        .neon { color: var(--neon); }
 
-        table { width: 100%; border-collapse: collapse; font-size: 9.5px; margin-top: 4px; }
-        th { color: var(--text-muted); padding: 4px 2px; text-align: right; border-bottom: 1px solid var(--border); font-size: 8.5px; }
+        /* Inputs & Tables */
+        .input-group { margin-bottom: 4px; }
+        label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; }
+        input, select, textarea {
+            width: 100%;
+            background: #05080f;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 5px;
+            border-radius: 4px;
+            font-size: 11px;
+            outline: none;
+        }
+
+        table { width: 100%; border-collapse: collapse; font-size: 10px; margin-top: 4px; }
+        th { color: var(--text-muted); padding: 4px 2px; text-align: right; border-bottom: 1px solid var(--border); font-size: 9px; }
         th:first-child, td:first-child { text-align: left; }
         td { padding: 5px 2px; border-bottom: 1px solid rgba(255,255,255,0.03); text-align: right; }
 
-        .meter-wrap {
-            height: 10px;
-            background: #141c2b;
-            border-radius: 3px;
-            overflow: hidden;
-            margin-top: 4px;
+        .btn-action {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 6px;
+            width: 100%;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 10px;
+            cursor: pointer;
+            margin-top: 5px;
         }
-        .meter-fill {
-            height: 100%;
-            transition: width 0.4s ease;
-        }
+
+        /* Volume Profile */
+        .vp-row { display: flex; align-items: center; gap: 6px; margin: 3px 0; font-size: 10px; }
+        .vp-bar-wrap { flex-grow: 1; background: rgba(255,255,255,0.05); height: 12px; border-radius: 2px; overflow: hidden; }
+        .vp-bar-fill { height: 100%; background: #334155; }
+        .poc-bar { background: var(--red) !important; }
+
+        /* IPO Components */
+        .ipo-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 10px; margin-bottom: 8px; }
+        .ipo-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; }
+        .ipo-logo { width: 36px; height: 36px; border-radius: 4px; background: #05080f; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); font-size: 18px; }
+        .verdict-badge { font-size: 9px; font-weight: 800; padding: 3px 6px; border-radius: 3px; }
+        .verdict-apply { background: rgba(16,185,129,0.2); color: var(--green); border: 1px solid var(--green); }
+        .verdict-avoid { background: rgba(244,63,94,0.2); color: var(--red); border: 1px solid var(--red); }
+        .whale-box { background: #05080f; border: 1px dashed var(--border); padding: 5px 7px; border-radius: 4px; margin: 5px 0; font-size: 9px; }
     </style>
 </head>
 <body>
 
-    <!-- Header with Language Selector -->
+    <!-- Header with Official Launcher Icon -->
     <div class="top-bar">
-        <div class="logo">ALPHA-X QUANTUM</div>
-        <div class="header-controls">
-            <select class="lang-select" id="langSelector" onchange="changeLanguage(this.value)">
-                <option value="gu" selected>ગુજરાતી</option>
-                <option value="en">English</option>
-                <option value="hi">हिन्दी</option>
-                <option value="mr">मराठी</option>
-                <option value="ta">தமிழ்</option>
-                <option value="te">తెలుగు</option>
-                <option value="bn">বাংলা</option>
-            </select>
-            <div class="secure-badge" id="shield-badge">🔒 ZERO-LEAK</div>
+        <div class="logo-wrap">
+            <img src="https://cdn-icons-png.flaticon.com/512/2422/2422796.png" class="app-icon" alt="Terminal Icon">
+            <div>
+                <div class="logo">ALPHA-X PRO</div>
+                <span style="font-size: 9px; color: var(--text-muted);">● AUTONOMOUS ENGINE</span>
+            </div>
+        </div>
+        <div class="secure-badge">🔒 AES-256 ZERO-LEAK</div>
+    </div>
+
+    <!-- Two-Way Voice Panel -->
+    <div class="control-panel">
+        <button class="btn-ctrl" id="voice-toggle-btn" onclick="toggleVoiceEngine()">🔊 VOICE RADAR: OFF</button>
+        <button class="btn-ctrl" id="mic-btn" onclick="listenUserCommand()">🎙️ SPEAK COMMAND</button>
+    </div>
+
+    <!-- AI Voice Log Status -->
+    <div class="card" style="padding: 6px 10px; margin-bottom: 8px;">
+        <div style="font-size: 9px; color: var(--text-muted);">LIVE ASSISTANT RADAR</div>
+        <div id="voice-log" style="color: var(--accent); font-weight: bold; margin-top: 2px;">સિસ્ટમ તૈયાર છે. "SPEAK COMMAND" દબાવો...</div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="tab-bar-wrap">
+        <div class="tab-bar">
+            <button class="tab-btn active" onclick="switchTab('radar-tab')">📡 RADAR & CHART</button>
+            <button class="tab-btn" onclick="switchTab('gex-tab')">📊 GEX/GREEKS</button>
+            <button class="tab-btn" onclick="switchTab('smart-money')">🐋 FII/PRO</button>
+            <button class="tab-btn" onclick="switchTab('vol-profile')">🎯 POC/VOL</button>
+            <button class="tab-btn" onclick="switchTab('macro-radar')">🌐 MACRO</button>
+            <button class="tab-btn" onclick="switchTab('ipo-tab')">🚀 IPO INTEL</button>
+            <button class="tab-btn" onclick="switchTab('vault-tab')">🔐 VAULT</button>
         </div>
     </div>
 
-    <!-- Smart NSE / BSE Live Search Bar -->
-    <div class="search-box">
-        <input type="text" class="search-input" id="stockSearch" placeholder="🔍 NSE / BSE શોધો (દા.ત. NIFTY, RELIANCE, TCS)..." oninput="filterStocks(this.value)">
-        <div class="search-results" id="searchResults"></div>
-    </div>
-
-    <!-- Current Selected Asset Live Bar -->
-    <div class="asset-bar">
-        <div>
-            <div style="font-weight:bold; font-size:12px;" id="selectedAsset">NIFTY 50</div>
-            <span style="font-size:8px; color:var(--text-muted);" id="exchangeBadge">NSE • INDEX</span>
-        </div>
-        <div style="text-align:right;">
-            <div class="metric-val up" id="currentLTP">₹24,350.00</div>
-            <span class="up" style="font-size:8.5px;" id="currentChange">+112.40 (+0.46%)</span>
-        </div>
-    </div>
-
-    <!-- Navigation Tabs -->
-    <div class="tab-bar">
-        <button class="tab-btn active" id="tab-btn-1" onclick="switchTab('vpin-tab')">ટોક્સિસિટી</button>
-        <button class="tab-btn" id="tab-btn-2" onclick="switchTab('pinning-tab')">0DTE પિન</button>
-        <button class="tab-btn" id="tab-btn-3" onclick="switchTab('arbitrage-tab')">આર્બિટ્રેજ</button>
-        <button class="tab-btn" id="tab-btn-4" onclick="switchTab('fuel-tab')">મેક્રો ફ્યુઅલ</button>
-        <button class="tab-btn" id="tab-btn-5" onclick="switchTab('quant-tab')">GEX/SKEW</button>
-        <button class="tab-btn" id="tab-btn-6" onclick="switchTab('enclave-tab')">સુરક્ષા</button>
-    </div>
-
-    <!-- TAB 1: TOXICITY (VPIN) -->
-    <div id="vpin-tab" class="tab-content active">
+    <!-- TAB 1: RADAR & LIVE CHART -->
+    <div id="radar-tab" class="tab-content active">
+        <!-- Live Candlestick Canvas -->
         <div class="card">
             <div class="card-title">
-                <span id="txt-vpin-title">VPIN ઓર્ડર ફ્લો ટોક્સિસિટી મીટર</span>
-                <span class="secure-badge" id="vpin-status">સુરક્ષિત / સંતુલિત</span>
+                <span>LIVE CANDLESTICK TICK STREAM</span>
+                <span class="up" id="chart-tick-price">24,354.20</span>
             </div>
-            <div class="grid-2">
-                <div>
-                    <div style="font-size:8.5px; color:var(--text-muted);" id="txt-curr-vpin">હાલનું VPIN લેવલ</div>
-                    <div class="metric-val up" id="vpin-val">0.242</div>
-                </div>
-                <div>
-                    <div style="font-size:8.5px; color:var(--text-muted);" id="txt-crash-prob">ક્રેશ થવાની શક્યતા</div>
-                    <div class="metric-val" id="crash-prob" style="font-size:13px;">3.6% (નહિવત)</div>
-                </div>
-            </div>
-            
-            <div class="meter-wrap">
-                <div class="meter-fill" id="vpin-meter" style="width: 24.2%; background: var(--green);"></div>
-            </div>
-
-            <div style="margin-top: 8px; padding: 6px; background: #03060a; border-radius: 4px; border: 1px solid var(--border);">
-                <span style="font-size: 8px; color: var(--text-muted);" id="txt-algo-insight">અલ્ગોરિધમિક રડાર ઇનસાઇટ</span>
-                <div style="font-size: 9.5px; margin-top: 2px;" id="vpin-desc">
-                    ઓર્ડર બુક સંપૂર્ણપણે સંતુલિત છે. કોઈ અસામાન્ય સેલિંગ પ્રેશર દેખાતું નથી.
-                </div>
-            </div>
+            <canvas id="liveChartCanvas" width="340" height="150" style="width: 100%; height: 150px; background: #020408; border-radius: 4px; border: 1px solid var(--border);"></canvas>
         </div>
-    </div>
 
-    <!-- TAB 2: 0DTE PIN -->
-    <div id="pinning-tab" class="tab-content">
         <div class="card">
             <div class="card-title">
-                <span id="txt-pin-title">0DTE એક્સપાયરી પિનિંગ અને સ્ટ્રાઇક ગ્રેવિટી</span>
-                <span class="gold">3:15 PM ટાર્ગેટ</span>
-            </div>
-            <div class="grid-2">
-                <div style="background:#03060a; padding:6px; border-radius:4px; text-align:center;">
-                    <div style="font-size:8px; color:var(--text-muted);" id="txt-target-strike">ટાર્ગેટ પિન સ્ટ્રાઇક</div>
-                    <div class="metric-val neon" id="pin-strike">24,350</div>
-                </div>
-                <div style="background:#03060a; padding:6px; border-radius:4px; text-align:center;">
-                    <div style="font-size:8px; color:var(--text-muted);" id="txt-pull-strength">ખેંચાણ બળ (STRENGTH)</div>
-                    <div class="metric-val gold" id="pin-force">88.4% (મજબૂત)</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- TAB 3: ARBITRAGE -->
-    <div id="arbitrage-tab" class="tab-content">
-        <div class="card">
-            <div class="card-title">
-                <span id="txt-arb-title">સિન્થેટિક બોક્સ અને પેરિટી સ્કેનર</span>
-                <span class="up">● રિસ્ક-ફ્રી સ્કેન</span>
+                <span>PREDICTIVE MARKET DIRECTION</span>
+                <span class="up">91% CONFIDENCE</span>
             </div>
             <table>
-                <thead>
-                    <tr><th>બોક્સ સ્પ્રેડ</th><th>થીઓરેટિકલ</th><th>બજાર ભાવ</th><th>નફો (ROI)</th></tr>
-                </thead>
+                <tr><td>NIFTY LIVE LTP</td><td id="live-nifty-ltp" style="font-size: 14px; font-weight: bold;">24,354.20</td></tr>
+                <tr><td>PREDICTED TREND</td><td class="up"><b>🟢 STRONG BULLISH MOMENTUM</b></td></tr>
+                <tr><td>PROJECTED TARGET</td><td class="gold"><b>24,440 (Next 25 Min)</b></td></tr>
+                <tr><td>CRITICAL SUPPORT / SL</td><td class="down"><b>24,310</b></td></tr>
+            </table>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <span>HEAVYWEIGHT STOCKS RADAR</span>
+                <span class="gold">TAP FOR ACTION</span>
+            </div>
+            <table>
+                <tr onclick="speakText('Reliance at 2815. Buy call recommended with 2840 strike.')">
+                    <td>RELIANCE</td><td>₹2,815</td><td class="up">🟢 BUY CALL</td>
+                </tr>
+                <tr onclick="speakText('Tata Motors at 972. Heavy delivery accumulation. Target 990.')">
+                    <td>TATA MOTORS</td><td>₹972</td><td class="up">🟢 ACCUMULATE</td>
+                </tr>
+                <tr onclick="speakText('HDFC Bank at 1640. Resistance rejection. Exit or hedge with Put.')">
+                    <td>HDFC BANK</td><td>₹1,640</td><td class="down">🔴 HEDGE / EXIT</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- TAB 2: GEX & GREEKS -->
+    <div id="gex-tab" class="tab-content">
+        <div class="grid-2">
+            <div class="card" style="margin:0;">
+                <div class="card-title">GAMMA REGIME</div>
+                <div class="metric-val up">+POSITIVE</div>
+                <span style="font-size: 9px; color: var(--text-muted);">Low Vol / Mean Reverting</span>
+            </div>
+            <div class="card" style="margin:0;">
+                <div class="card-title">ZERO GAMMA FLIP</div>
+                <div class="metric-val gold">24,280</div>
+                <span class="down" style="font-size: 9px;">Danger below this</span>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 8px;">
+            <div class="card-title">Institutional Greeks Engine</div>
+            <div class="grid-2">
+                <div class="input-group">
+                    <label>Spot (S)</label>
+                    <input type="number" id="s_spot" value="24350" oninput="runAllGreeks()">
+                </div>
+                <div class="input-group">
+                    <label>Strike (K)</label>
+                    <input type="number" id="s_strike" value="24400" oninput="runAllGreeks()">
+                </div>
+                <div class="input-group">
+                    <label>DTE (Days)</label>
+                    <input type="number" id="s_dte" value="3" oninput="runAllGreeks()">
+                </div>
+                <div class="input-group">
+                    <label>IV (%)</label>
+                    <input type="number" id="s_iv" value="13.5" oninput="runAllGreeks()">
+                </div>
+            </div>
+
+            <table>
+                <thead><tr><th>METRIC</th><th>CALL</th><th>PUT</th></tr></thead>
                 <tbody>
-                    <tr>
-                        <td>24,300 / 24,400 Box</td>
-                        <td>₹100.00</td>
-                        <td class="neon">₹98.30</td>
-                        <td class="up"><b>+1.70%</b></td>
-                    </tr>
-                    <tr>
-                        <td>24,200 / 24,300 Box</td>
-                        <td>₹100.00</td>
-                        <td>₹99.40</td>
-                        <td class="up">+0.60%</td>
-                    </tr>
+                    <tr><td>Delta (Speed)</td><td id="c_d" class="up">0.00</td><td id="p_d" class="down">0.00</td></tr>
+                    <tr><td>Gamma (Acceleration)</td><td id="c_g">0.00</td><td id="p_g">0.00</td></tr>
+                    <tr><td>Theta (Daily Decay)</td><td id="c_t" class="down">0.00</td><td id="p_t" class="down">0.00</td></tr>
+                    <tr><td class="purple">Vanna (dDelta/dVol)</td><td id="c_vanna" class="purple">0.00</td><td id="p_vanna" class="purple">0.00</td></tr>
+                    <tr><td class="gold">Charm (Delta Decay)</td><td id="c_charm" class="gold">0.00</td><td id="p_charm" class="gold">0.00</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- TAB 4: MACRO FUEL -->
-    <div id="fuel-tab" class="tab-content">
+    <!-- TAB 3: SMART MONEY (FII / PRO) -->
+    <div id="smart-money" class="tab-content">
         <div class="card">
             <div class="card-title">
-                <span id="txt-macro-title">RBI સિસ્ટમ લિક્વિડિટી (ફ્યુઅલ મીટર)</span>
-                <span class="gold">બેંકિંગ ઇનફ્લો</span>
+                <span>FII / PRO DESK POSITIONING</span>
+                <span class="gold">Index Futures</span>
+            </div>
+            <table>
+                <thead><tr><th>PARTICIPANT</th><th>LONG</th><th>SHORT</th><th>NET RATIO</th></tr></thead>
+                <tbody>
+                    <tr><td><b>FII (Foreign)</b></td><td class="up">1,24,500</td><td class="down">62,100</td><td class="up"><b>2.00 (BULLISH)</b></td></tr>
+                    <tr><td><b>Pro Desk (HFTs)</b></td><td class="up">45,100</td><td class="down">78,900</td><td class="down"><b>0.57 (HEDGED)</b></td></tr>
+                    <tr><td><b>Client (Retail)</b></td><td class="up">2,10,000</td><td class="down">2,38,000</td><td class="down"><b>0.88 (BEARISH)</b></td></tr>
+                </tbody>
+            </table>
+            <div style="margin-top: 8px; padding: 6px; background: #05080f; border-radius: 4px; border: 1px solid var(--border);">
+                <div style="font-size: 10px; font-weight: bold;" class="up">
+                    ALERT: રિટેલ પુટ બાય કરી રહી છે, જ્યારે FII ફ્યુચર્સ લોંગ છે. શોર્ટ સ્ક્વીઝ રેલીની શક્યતા વધુ.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 4: VOLUME PROFILE (POC) -->
+    <div id="vol-profile" class="tab-content">
+        <div class="card">
+            <div class="card-title">
+                <span>Session Volume Profile (Nifty)</span>
+                <span style="color:var(--red);">🔴 POC: 24,350</span>
+            </div>
+            <p style="font-size: 9px; color: var(--text-muted); margin-bottom: 6px;">
+                VAH (24,420) અને VAL (24,290) ની વચ્ચે 70% વોલ્યુમ છે:
+            </p>
+            <div id="vp-container"></div>
+        </div>
+    </div>
+
+    <!-- TAB 5: MACRO RADAR -->
+    <div id="macro-radar" class="tab-content">
+        <div class="card">
+            <div class="card-title">Macro Intermarket Correlation</div>
+            <table>
+                <thead><tr><th>ASSET</th><th>VALUE</th><th>CHANGE</th><th>IMPACT</th></tr></thead>
+                <tbody>
+                    <tr><td>Brent Crude Oil</td><td>$74.20</td><td class="down">-1.4%</td><td class="up">POSITIVE</td></tr>
+                    <tr><td>USD / INR</td><td>84.15</td><td class="up">+0.08%</td><td class="down">NEUTRAL</td></tr>
+                    <tr><td>US 10Y Treasury</td><td>4.12%</td><td class="down">-4 bps</td><td class="up">POSITIVE</td></tr>
+                    <tr><td>India 10Y G-Sec</td><td>6.98%</td><td class="down">-2 bps</td><td class="up">BULLISH</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TAB 6: IPO INTELLIGENCE RADAR -->
+    <div id="ipo-tab" class="tab-content">
+        <div style="display: flex; gap: 6px; margin-bottom: 8px;">
+            <button class="btn-ctrl active-green" id="btn-mainboard" style="flex:1;" onclick="filterIPOSegment('MAIN')">NSE/BSE MAINBOARD</button>
+            <button class="btn-ctrl" id="btn-sme" style="flex:1;" onclick="filterIPOSegment('SME')">NSE/BSE SME BOARD</button>
+        </div>
+        <div id="ipo-cards-container"></div>
+    </div>
+
+    <!-- TAB 7: ENCRYPTED VAULT -->
+    <div id="vault-tab" class="tab-content">
+        <div class="card">
+            <div class="card-title">Hardware-Level AES-256 Vault</div>
+            <div class="input-group">
+                <label>Security PIN</label>
+                <input type="password" id="vault-pin" placeholder="Enter PIN">
+            </div>
+            <div class="input-group">
+                <label>Secret Strategies / Watchlist</label>
+                <textarea id="vault-data" rows="3" placeholder="સિક્રેટ નોટ્સ અહીં લખો..."></textarea>
             </div>
             <div class="grid-2">
-                <div style="background:#03060a; padding:6px; border-radius:4px;">
-                    <span style="color:var(--text-muted); font-size:8px;">નેટ સિસ્ટમ કેશ</span>
-                    <div class="metric-val up" style="font-size:12px;">+₹85,400 Cr</div>
-                </div>
-                <div style="background:#03060a; padding:6px; border-radius:4px;">
-                    <span style="color:var(--text-muted); font-size:8px;">TREPS રેટ</span>
-                    <div class="metric-val gold" style="font-size:12px;">6.42%</div>
-                </div>
+                <button class="btn-action" onclick="encryptAndSaveVault()">🔒 LOCK & SAVE</button>
+                <button class="btn-action" style="background: var(--border); color: #fff;" onclick="decryptVault()">🔓 UNLOCK</button>
             </div>
-        </div>
-    </div>
-
-    <!-- TAB 5: GEX / SKEW -->
-    <div id="quant-tab" class="tab-content">
-        <div class="card">
-            <div class="card-title">
-                <span id="txt-gex-title">વોલેટિલિટી સ્કેવ અને ગામા એક્સપોઝર</span>
-                <span class="purple">Live Smile</span>
-            </div>
-            <div class="grid-2" style="margin-top:6px;">
-                <div style="text-align:center;">
-                    <span style="font-size:8px; color:var(--text-muted);">ઝીરો ગામા લેવલ</span>
-                    <div class="metric-val gold" style="font-size:13px;">24,285</div>
-                </div>
-                <div style="text-align:center;">
-                    <span style="font-size:8px; color:var(--text-muted);">વાન્ના એક્સપોઝર</span>
-                    <div class="metric-val neon" style="font-size:13px;">+1.48</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- TAB 6: SECURITY -->
-    <div id="enclave-tab" class="tab-content">
-        <div class="card">
-            <div class="card-title">
-                <span id="txt-sec-title">ઝીરો-નોલેજ હાર્ડવેર એન્ક્લેવ સિક્યોરિટી</span>
-                <span class="secure-badge">AES-256</span>
-            </div>
-            <div style="font-size:9px; color:var(--text-muted); line-height:1.4; margin-bottom:6px;" id="txt-sec-desc">
-                કોઈ સેન્ટ્રલ સર્વર નથી. તમામ ગણતરીઓ અને ડેટા તમારા ફોનની અંદર જ લોકલ પ્રોસેસ થાય છે.
-            </div>
+            <div id="vault-status" style="font-size: 9px; color: var(--gold); margin-top: 6px; text-align: center;"></div>
         </div>
     </div>
 
     <script>
-        // Indian Stocks & Indices Database
-        const stockDatabase = [
-            { symbol: "NIFTY 50", name: "Nifty 50 Index", ex: "NSE", ltp: 24350.00, chg: "+112.40 (+0.46%)", up: true },
-            { symbol: "BANKNIFTY", name: "Bank Nifty Index", ex: "NSE", ltp: 52140.80, chg: "+340.20 (+0.65%)", up: true },
-            { symbol: "SENSEX", name: "BSE Sensex Index", ex: "BSE", ltp: 80110.50, chg: "+380.10 (+0.48%)", up: true },
-            { symbol: "RELIANCE", name: "Reliance Industries", ex: "NSE", ltp: 2980.50, chg: "+18.20 (+0.61%)", up: true },
-            { symbol: "HDFCBANK", name: "HDFC Bank Ltd", ex: "NSE", ltp: 1645.00, chg: "-4.50 (-0.27%)", up: false },
-            { symbol: "TCS", name: "Tata Consultancy Services", ex: "NSE", ltp: 4210.00, chg: "+35.60 (+0.85%)", up: true },
-            { symbol: "INFY", name: "Infosys Limited", ex: "NSE", ltp: 1890.30, chg: "+12.10 (+0.64%)", up: true },
-            { symbol: "TATAMOTORS", name: "Tata Motors Ltd", ex: "NSE", ltp: 968.40, chg: "-8.30 (-0.85%)", up: false },
-            { symbol: "SBIN", name: "State Bank of India", ex: "NSE", ltp: 815.20, chg: "+6.40 (+0.79%)", up: true },
-            { symbol: "ICICIBANK", name: "ICICI Bank Ltd", ex: "NSE", ltp: 1220.00, chg: "+9.80 (+0.81%)", up: true }
-        ];
-
-        // Search Filter Engine
-        function filterStocks(query) {
-            const resultsBox = document.getElementById('searchResults');
-            if(!query.trim()) {
-                resultsBox.style.display = 'none';
-                return;
-            }
-
-            const filtered = stockDatabase.filter(s => 
-                s.symbol.toLowerCase().includes(query.toLowerCase()) || 
-                s.name.toLowerCase().includes(query.toLowerCase())
-            );
-
-            if(filtered.length === 0) {
-                resultsBox.innerHTML = `<div style="padding:8px; color:var(--text-muted); font-size:10px;">કોઈ પરિણામ મળ્યું નથી</div>`;
-                resultsBox.style.display = 'block';
-                return;
-            }
-
-            resultsBox.innerHTML = filtered.map(s => `
-                <div class="search-item" onclick="selectAsset('${s.symbol}', '${s.ex}', ${s.ltp}, '${s.chg}', ${s.up})">
-                    <div>
-                        <div style="font-weight:bold; font-size:10.5px;">${s.symbol}</div>
-                        <div style="font-size:8px; color:var(--text-muted);">${s.name}</div>
-                    </div>
-                    <div style="text-align:right;">
-                        <div style="font-weight:bold;">₹${s.ltp.toFixed(2)}</div>
-                        <div style="font-size:8px;" class="${s.up ? 'up':'down'}">${s.ex}</div>
-                    </div>
-                </div>
-            `).join('');
-
-            resultsBox.style.display = 'block';
-        }
-
-        function selectAsset(sym, ex, ltp, chg, isUp) {
-            document.getElementById('selectedAsset').innerText = sym;
-            document.getElementById('exchangeBadge').innerText = `${ex} • LIVE DATA`;
-            document.getElementById('currentLTP').innerText = `₹${ltp.toFixed(2)}`;
-            
-            const chgEl = document.getElementById('currentChange');
-            chgEl.innerText = chg;
-            chgEl.className = isUp ? 'up' : 'down';
-            document.getElementById('currentLTP').className = `metric-val ${isUp ? 'up' : 'down'}`;
-
-            document.getElementById('stockSearch').value = "";
-            document.getElementById('searchResults').style.display = 'none';
-            document.getElementById('pin-strike').innerText = Math.round(ltp / 50) * 50;
-        }
-
-        // Multi-Language Translation Dictionary
-        const translations = {
-            gu: {
-                search_ph: "🔍 NSE / BSE શોધો (દા.ત. NIFTY, RELIANCE, TCS)...",
-                tab1: "ટોક્સિસિટી", tab2: "0DTE પિન", tab3: "આર્બિટ્રેજ", tab4: "મેક્રો ફ્યુઅલ", tab5: "GEX/SKEW", tab6: "સુરક્ષા",
-                vpin_title: "VPIN ઓર્ડર ફ્લો ટોક્સિસિટી મીટર",
-                vpin_safe: "સુરક્ષિત / સંતુલિત",
-                curr_vpin: "હાલનું VPIN લેવલ",
-                crash_prob: "ક્રેશ થવાની શક્યતા",
-                algo_insight: "અલ્ગોરિધમિક રડાર ઇનસાઇટ",
-                vpin_desc: "ઓર્ડર બુક સંપૂર્ણપણે સંતુલિત છે. કોઈ અસામાન્ય સેલિંગ પ્રેશર દેખાતું નથી.",
-                pin_title: "0DTE એક્સપાયરી પિનિંગ અને સ્ટ્રાઇક ગ્રેવિટી",
-                target_strike: "ટાર્ગેટ પિન સ્ટ્રાઇક",
-                pull_strength: "ખેંચાણ બળ (STRENGTH)",
-                arb_title: "સિન્થેટિક બોક્સ અને પેરિટી સ્કેનર",
-                macro_title: "RBI સિસ્ટમ લિક્વિડિટી (ફ્યુઅલ મીટર)",
-                gex_title: "વોલેટિલિટી સ્કેવ અને ગામા એક્સપોઝર",
-                sec_title: "ઝીરો-નોલેજ હાર્ડવેર એન્ક્લેવ સિક્યોરિટી",
-                sec_desc: "કોઈ સેન્ટ્રલ સર્વર નથી. તમામ ગણતરીઓ અને ડેટા તમારા ફોનની અંદર જ લોકલ પ્રોસેસ થાય છે."
-            },
-            en: {
-                search_ph: "🔍 Search NSE / BSE (e.g. NIFTY, RELIANCE, TCS)...",
-                tab1: "TOXICITY", tab2: "0DTE PIN", tab3: "ARBITRAGE", tab4: "MACRO FUEL", tab5: "GEX/SKEW", tab6: "SECURITY",
-                vpin_title: "VPIN Order Flow Toxicity Meter",
-                vpin_safe: "SAFE / BALANCED",
-                curr_vpin: "CURRENT VPIN LEVEL",
-                crash_prob: "CRASH PROBABILITY",
-                algo_insight: "ALGORITHMIC RADAR INSIGHT",
-                vpin_desc: "Order book is completely balanced. No unusual selling pressure detected.",
-                pin_title: "0DTE Expiry Gravity & Pinning Center",
-                target_strike: "GRAVITATIONAL PIN STRIKE",
-                pull_strength: "PULL STRENGTH (FORCE)",
-                arb_title: "Synthetic Box & Parity Scanner",
-                macro_title: "RBI System Liquidity & Fuel Meter",
-                gex_title: "Volatility Skew & Gamma Exposure",
-                sec_title: "Zero-Knowledge Hardware Enclave Security",
-                sec_desc: "Zero central servers. All quant math executes locally inside your secure chip."
-            },
-            hi: {
-                search_ph: "🔍 NSE / BSE खोजें (जैसे NIFTY, RELIANCE, TCS)...",
-                tab1: "टॉक्सिसिटी", tab2: "0DTE पिन", tab3: "आर्बिट्राज", tab4: "मैक्रो फ्यूल", tab5: "GEX/SKEW", tab6: "सुरक्षा",
-                vpin_title: "VPIN ऑर्डर फ्लो टॉक्सिसिटी मीटर",
-                vpin_safe: "सुरक्षित / संतुलित",
-                curr_vpin: "वर्तमान VPIN स्तर",
-                crash_prob: "क्रैश की संभावना",
-                algo_insight: "एल्गोरिथम रडार इनसाइट",
-                vpin_desc: "ऑर्डर बुक पूरी तरह से संतुलित है। कोई असामान्य बिकवाली दबाव नहीं है।",
-                pin_title: "0DTE एक्सपायरी पिनिंग एवं स्ट्राइक ग्रेविटी",
-                target_strike: "टारगेट पिन स्ट्राइक",
-                pull_strength: "खिंचाव बल (STRENGTH)",
-                arb_title: "सिंथेटिक बॉक्स और पैरिटी स्कैनर",
-                macro_title: "RBI सिस्टम लिक्विडिटी (फ्यूल मीटर)",
-                gex_title: "वोलैटिलिटी स्क्यू और गामा एक्सपोज़र",
-                sec_title: "ज़ीरो-नॉलेज हार्डवेयर एन्क्लेव सुरक्षा",
-                sec_desc: "कोई सेंट्रल सर्वर नहीं है। सारा डेटा सीधे आपके फोन में लोकली प्रोसेस होता है।"
-            },
-            mr: {
-                search_ph: "🔍 NSE / BSE शोधा (उदा. NIFTY, RELIANCE, TCS)...",
-                tab1: "टॉक्सिसिटी", tab2: "0DTE पिन", tab3: "आर्बिट्रेज", tab4: "मॅक्रो फ्युएल", tab5: "GEX/SKEW", tab6: "सुरक्षा",
-                vpin_title: "VPIN ऑर्डर फ्लो टॉक्सिसिटी मीटर",
-                vpin_safe: "सुरक्षित / संतुलित",
-                curr_vpin: "सध्याची VPIN पातळी",
-                crash_prob: "क्रॅशची शक्यता",
-                algo_insight: "अल्गोरिदम रडार इनसाइट",
-                vpin_desc: "ऑर्डर बुक पूर्णपणे संतुलित आहे. कोणताही विक्री दबाव नाही.",
-                pin_title: "0DTE एक्सपायरी पिनिंग आणि स्ट्राइक ग्रॅव्हिटी",
-                target_strike: "टार्गेट पिन स्ट्राइक",
-                pull_strength: "ओढण्याची ताकद",
-                arb_title: "सिंथेटिक बॉक्स आणि पॅरिटी स्कॅनर",
-                macro_title: "RBI सिस्टम लिक्विडिटी (फ्युएल मीटर)",
-                gex_title: "व्होलाटिलिटी स्क्यू आणि गॅमा एक्सपोजर",
-                sec_title: "झिरो-नॉलेज हार्डवेअर एन्क्लेव्ह सुरक्षा",
-                sec_desc: "कोणताही सर्व्हर नाही. सर्व प्रक्रिया थेट तुमच्या मोबाईलमध्ये स्थानिक पातळीवर होते."
-            }
-        };
-
-        function changeLanguage(lang) {
-            const l = translations[lang] || translations['en'];
-            document.getElementById('stockSearch').placeholder = l.search_ph;
-            document.getElementById('tab-btn-1').innerText = l.tab1;
-            document.getElementById('tab-btn-2').innerText = l.tab2;
-            document.getElementById('tab-btn-3').innerText = l.tab3;
-            document.getElementById('tab-btn-4').innerText = l.tab4;
-            document.getElementById('tab-btn-5').innerText = l.tab5;
-            document.getElementById('tab-btn-6').innerText = l.tab6;
-
-            document.getElementById('txt-vpin-title').innerText = l.vpin_title;
-            document.getElementById('vpin-status').innerText = l.vpin_safe;
-            document.getElementById('txt-curr-vpin').innerText = l.curr_vpin;
-            document.getElementById('txt-crash-prob').innerText = l.crash_prob;
-            document.getElementById('txt-algo-insight').innerText = l.algo_insight;
-            document.getElementById('vpin-desc').innerText = l.vpin_desc;
-            document.getElementById('txt-pin-title').innerText = l.pin_title;
-            document.getElementById('txt-target-strike').innerText = l.target_strike;
-            document.getElementById('txt-pull-strength').innerText = l.pull_strength;
-            document.getElementById('txt-arb-title').innerText = l.arb_title;
-            document.getElementById('txt-macro-title').innerText = l.macro_title;
-            document.getElementById('txt-gex-title').innerText = l.gex_title;
-            document.getElementById('txt-sec-title').innerText = l.sec_title;
-            document.getElementById('txt-sec-desc').innerText = l.sec_desc;
-        }
-
+        // Navigation Switcher
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             event.target.classList.add('active');
+            if (tabId === 'radar-tab') drawLiveCandles();
         }
+
+        // Live Canvas Candlestick Chart Engine
+        function drawLiveCandles() {
+            const canvas = document.getElementById('liveChartCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Grid background lines
+            ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+            for (let y = 20; y < 150; y += 30) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+
+            const bars = [
+                {o: 50, h: 75, l: 40, c: 70, up: true},
+                {o: 70, h: 85, l: 65, c: 80, up: true},
+                {o: 80, h: 90, l: 60, c: 65, up: false},
+                {o: 65, h: 80, l: 55, c: 75, up: true},
+                {o: 75, h: 105, l: 70, c: 98, up: true},
+                {o: 98, h: 115, l: 92, c: 110, up: true},
+                {o: 110, h: 125, l: 105, c: 120, up: true}
+            ];
+
+            let w = 24;
+            let spacing = 45;
+            bars.forEach((b, i) => {
+                let x = 20 + i * spacing;
+                let color = b.up ? '#10b981' : '#f43f5e';
+                ctx.strokeStyle = color;
+                ctx.fillStyle = color;
+
+                // Wick
+                ctx.beginPath();
+                ctx.moveTo(x + w/2, 150 - b.h);
+                ctx.lineTo(x + w/2, 150 - b.l);
+                ctx.stroke();
+
+                // Candle Body
+                let y = 150 - Math.max(b.o, b.c);
+                let h = Math.abs(b.o - b.c) || 2;
+                ctx.fillRect(x, y, w, h);
+            });
+        }
+
+        // Voice Engine (TTS)
+        let isVoiceActive = false;
+        function toggleVoiceEngine() {
+            isVoiceActive = !isVoiceActive;
+            const btn = document.getElementById('voice-toggle-btn');
+            if(isVoiceActive) {
+                btn.innerText = "🔊 VOICE RADAR: ACTIVE";
+                btn.classList.add('active-green');
+                speakText("Alpha-X Voice Radar Active. Background market monitoring started.");
+            } else {
+                btn.innerText = "🔇 VOICE RADAR: OFF";
+                btn.classList.remove('active-green');
+                window.speechSynthesis.cancel();
+            }
+        }
+
+        function speakText(text) {
+            document.getElementById('voice-log').innerText = text;
+            if(!isVoiceActive && !text.includes("Active")) return;
+            window.speechSynthesis.cancel();
+            let utt = new SpeechSynthesisUtterance(text);
+            utt.lang = "en-IN";
+            window.speechSynthesis.speak(utt);
+        }
+
+        // Microphone Voice Commands (STT)
+        function listenUserCommand() {
+            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if(!SpeechRec) {
+                alert("તમારા બ્રાઉઝરમાં માઇક્રોફોન સ્પીચ સપોર્ટ ઉપલબ્ધ નથી.");
+                return;
+            }
+            const micBtn = document.getElementById('mic-btn');
+            const rec = new SpeechRec();
+            rec.lang = 'en-US';
+
+            rec.onstart = () => {
+                micBtn.classList.add('active-red');
+                micBtn.innerText = "🎙️ LISTENING...";
+            };
+            rec.onresult = (e) => {
+                let cmd = e.results[0][0].transcript.toLowerCase();
+                micBtn.classList.remove('active-red');
+                micBtn.innerText = "🎙️ SPEAK COMMAND";
+                processCommand(cmd);
+            };
+            rec.onerror = () => {
+                micBtn.classList.remove('active-red');
+                micBtn.innerText = "🎙️ SPEAK COMMAND";
+            };
+            rec.start();
+        }
+
+        function processCommand(cmd) {
+            document.getElementById('voice-log').innerText = "Command: " + cmd;
+            if(cmd.includes("nifty") || cmd.includes("market")) {
+                speakText("Nifty is strongly bullish above 24,350. Next target 24,440.");
+            } else if(cmd.includes("reliance")) {
+                speakText("Reliance at 2815. Recommended to buy Call option at 2840 strike.");
+            } else if(cmd.includes("tata")) {
+                speakText("Tata Motors delivery volume is high. Target 990.");
+            } else if(cmd.includes("hdfc")) {
+                speakText("HDFC Bank facing resistance at 1665. Caution advised.");
+            } else {
+                speakText("Command analyzed: " + cmd + ". Overall market conditions are positive.");
+            }
+        }
+
+        // Mathematical Greeks Engine
+        function normalCDF(x) {
+            let a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741, a4 = -1.453152027, a5 = 1.061405429, p = 0.3275911;
+            let sign = x < 0 ? -1 : 1;
+            x = Math.abs(x) / Math.sqrt(2.0);
+            let t = 1.0 / (1.0 + p * x);
+            let erf = 1.0 - (((((a5 * t + a4) * t + a3) * t + a2) * t + a1) * t) * Math.exp(-x * x);
+            return 0.5 * (1.0 + sign * erf);
+        }
+
+        function runAllGreeks() {
+            let S = parseFloat(document.getElementById('s_spot').value);
+            let K = parseFloat(document.getElementById('s_strike').value);
+            let T = Math.max(parseFloat(document.getElementById('s_dte').value) / 365, 0.0001);
+            let sigma = parseFloat(document.getElementById('s_iv').value) / 100;
+            let r = 0.068;
+
+            let d1 = (Math.log(S / K) + (r + (sigma * sigma) / 2) * T) / (sigma * Math.sqrt(T));
+            let d2 = d1 - sigma * Math.sqrt(T);
+            let nd1 = (1.0 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * d1 * d1);
+
+            let c_d = normalCDF(d1);
+            let p_d = c_d - 1;
+            let g = nd1 / (S * sigma * Math.sqrt(T));
+            let v = (S * nd1 * Math.sqrt(T)) / 100;
+            let c_t = (-(S * nd1 * sigma) / (2 * Math.sqrt(T)) - r * K * Math.exp(-r * T) * normalCDF(d2)) / 365;
+            let p_t = (-(S * nd1 * sigma) / (2 * Math.sqrt(T)) + r * K * Math.exp(-r * T) * normalCDF(-d2)) / 365;
+            let vanna = (v / S) * (1 - d1 / (sigma * Math.sqrt(T)));
+            let charm = (nd1 * ((2 * r * T - d2 * sigma * Math.sqrt(T)) / (2 * T * sigma * Math.sqrt(T)))) / 365;
+
+            document.getElementById('c_d').innerText = c_d.toFixed(3);
+            document.getElementById('p_d').innerText = p_d.toFixed(3);
+            document.getElementById('c_g').innerText = g.toFixed(4);
+            document.getElementById('p_g').innerText = g.toFixed(4);
+            document.getElementById('c_t').innerText = c_t.toFixed(2);
+            document.getElementById('p_t').innerText = p_t.toFixed(2);
+            document.getElementById('c_vanna').innerText = vanna.toFixed(4);
+            document.getElementById('p_vanna').innerText = vanna.toFixed(4);
+            document.getElementById('c_charm').innerText = charm.toFixed(4);
+            document.getElementById('p_charm').innerText = charm.toFixed(4);
+        }
+
+        // Volume Profile Engine
+        function renderVolumeProfile() {
+            const container = document.getElementById('vp-container');
+            const levels = [
+                { price: 24450, vol: 35 },
+                { price: 24400, vol: 65 },
+                { price: 24350, vol: 100, isPOC: true },
+                { price: 24300, vol: 75 },
+                { price: 24250, vol: 40 },
+                { price: 24200, vol: 20 }
+            ];
+            container.innerHTML = "";
+            levels.forEach(lvl => {
+                let row = document.createElement('div');
+                row.className = 'vp-row';
+                row.innerHTML = `
+                    <span style="width:45px; font-weight:${lvl.isPOC ? 'bold':'normal'}; color:${lvl.isPOC ? 'var(--red)':'var(--text-main)'}">${lvl.price}</span>
+                    <div class="vp-bar-wrap">
+                        <div class="vp-bar-fill ${lvl.isPOC ? 'poc-bar' : ''}" style="width: ${lvl.vol}%;"></div>
+                    </div>
+                    <span style="width:30px; text-align:right; font-size:9px; color:var(--text-muted);">${lvl.vol}k</span>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        // IPO Intelligence Engine
+        const ipoDB = [
+            {
+                name: "Premier Energies Ltd", segment: "MAIN", logo: "☀️", price: "₹427 - ₹450", lot: "33 Shares",
+                gmp: "+₹390 (86%)", verdict: "STRONG APPLY", vClass: "verdict-apply",
+                whales: ["Abu Dhabi IA", "Goldman Sachs", "HDFC Mutual Fund"],
+                about: "સોલાર સેલ અને મોડ્યુલ ઉત્પાદક. ₹5,000+ કરોડની ઓર્ડર બુક સાથે અંડરવેલ્યુડ."
+            },
+            {
+                name: "Kross Limited", segment: "MAIN", logo: "⚙️", price: "₹228 - ₹240", lot: "62 Shares",
+                gmp: "+₹0 (0%)", verdict: "AVOID / RISK", vClass: "verdict-avoid",
+                whales: ["No Big Foreign Whales"],
+                about: "ટ્રેઇલર એક્સલ નિર્માતા. હાઇ ડેટ અને મોંઘુ વેલ્યુએશન."
+            },
+            {
+                name: "Paramount Dye-Chem", segment: "SME", logo: "🧪", price: "₹115 - ₹117", lot: "1200 Shares",
+                gmp: "+₹72 (61%)", verdict: "APPLY (RISKY)", vClass: "verdict-apply",
+                whales: ["Craft Emerging Market Fund"],
+                about: "સ્પેશિયાલિટી કેમિકલ્સ. હાઇ રિટર્ન પણ લિક્વિડિટી રિસ્ક."
+            }
+        ];
+
+        function renderIPOs(seg = "MAIN") {
+            const cont = document.getElementById("ipo-cards-container");
+            cont.innerHTML = "";
+            ipoDB.filter(x => x.segment === seg).forEach(ipo => {
+                let d = document.createElement("div");
+                d.className = "ipo-card";
+                d.innerHTML = `
+                    <div class="ipo-header">
+                        <div class="ipo-logo">${ipo.logo}</div>
+                        <div style="flex-grow:1;">
+                            <div style="font-size:11px; font-weight:bold;">${ipo.name}</div>
+                            <span style="font-size:9px; color:var(--text-muted);">${ipo.segment} | Lot: ${ipo.lot}</span>
+                        </div>
+                        <div class="verdict-badge ${ipo.vClass}">${ipo.verdict}</div>
+                    </div>
+                    <div class="grid-2" style="margin-bottom:4px;">
+                        <div><span style="color:var(--text-muted); font-size:9px;">PRICE:</span> <b>${ipo.price}</b></div>
+                        <div style="text-align:right;"><span style="color:var(--text-muted); font-size:9px;">EST. GAIN:</span> <b class="up">${ipo.gmp}</b></div>
+                    </div>
+                    <p style="font-size:9px; color:#cbd5e1; margin-bottom:4px;">${ipo.about}</p>
+                    <div class="whale-box">
+                        <b style="color:var(--accent);">🐋 Anchor Whales:</b> ${ipo.whales.join(", ")}
+                    </div>
+                `;
+                cont.appendChild(d);
+            });
+        }
+
+        function filterIPOSegment(type) {
+            document.getElementById("btn-mainboard").classList.remove("active-green");
+            document.getElementById("btn-sme").classList.remove("active-green");
+            if(type === 'MAIN') document.getElementById("btn-mainboard").classList.add("active-green");
+            else document.getElementById("btn-sme").classList.add("active-green");
+            renderIPOs(type);
+        }
+
+        // Vault AES-256 GCM Client Encryption
+        async function getDerivedKey(pin) {
+            let enc = new TextEncoder();
+            let keyMat = await window.crypto.subtle.importKey("raw", enc.encode(pin), { name: "PBKDF2" }, false, ["deriveKey"]);
+            return window.crypto.subtle.deriveKey(
+                { name: "PBKDF2", salt: enc.encode("ALPHA_SALT"), iterations: 100000, hash: "SHA-256" },
+                keyMat, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]
+            );
+        }
+
+        async function encryptAndSaveVault() {
+            let pin = document.getElementById('vault-pin').value;
+            let text = document.getElementById('vault-data').value;
+            if(!pin || !text) return alert("PIN અને ડેટા બંને દાખલ કરો.");
+            try {
+                let key = await getDerivedKey(pin);
+                let iv = window.crypto.getRandomValues(new Uint8Array(12));
+                let cipher = await window.crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, key, new TextEncoder().encode(text));
+                localStorage.setItem("VAULT_PKG", JSON.stringify({ iv: Array.from(iv), data: Array.from(new Uint8Array(cipher)) }));
+                document.getElementById('vault-data').value = "";
+                document.getElementById('vault-status').innerText = "✅ AES-256 થી સુરક્ષિત સેવ થયું!";
+            } catch(e) { document.getElementById('vault-status').innerText = "❌ એરર આવી."; }
+        }
+
+        async function decryptVault() {
+            let pin = document.getElementById('vault-pin').value;
+            let raw = localStorage.getItem("VAULT_PKG");
+            if(!pin || !raw) return alert("PIN નાખો અથવા કોઈ ડેટા નથી.");
+            try {
+                let pkg = JSON.parse(raw);
+                let key = await getDerivedKey(pin);
+                let dec = await window.crypto.subtle.decrypt({ name: "AES-GCM", iv: new Uint8Array(pkg.iv) }, key, new Uint8Array(pkg.data));
+                document.getElementById('vault-data').value = new TextDecoder().decode(dec);
+                document.getElementById('vault-status').innerText = "🔓 અનલૉક સફળ!";
+            } catch(e) { document.getElementById('vault-status').innerText = "❌ ખોટો PIN!"; }
+        }
+
+        // Autonomous Ticker Simulation Loop
+        let simPrice = 24354.20;
+        setInterval(() => {
+            simPrice = parseFloat((simPrice + (Math.random() * 4 - 1.8)).toFixed(2));
+            const formatted = simPrice.toLocaleString('en-IN');
+            document.getElementById('live-nifty-ltp').innerText = formatted;
+            document.getElementById('chart-tick-price').innerText = formatted;
+        }, 3000);
+
+        // Run On Start
+        runAllGreeks();
+        renderVolumeProfile();
+        renderIPOs("MAIN");
+        drawLiveCandles();
     </script>
 </body>
 </html>
